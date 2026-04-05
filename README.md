@@ -1,4 +1,4 @@
-# code-snippet-saver-my
+# code-snippet-saver-skd
 
 This is a [Next.js](https://nextjs.org) project bootstrapped 
 
