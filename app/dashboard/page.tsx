@@ -2,13 +2,15 @@
 
 import { useState, useCallback } from 'react'
 import useSWR from 'swr'
-import { DashboardHeader } from '@/components/dashboard-header'
+import { DashboardSidebar } from '@/components/dashboard-sidebar'
+import { LanguageFilter } from '@/components/language-filter'
 import { SnippetCard } from '@/components/snippet-card'
 import { SnippetDialog } from '@/components/snippet-dialog'
 import { SnippetDetailPanel } from '@/components/snippet-detail-panel'
-import { TagFilter } from '@/components/tag-filter'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { SnippetWithTags, Tag, Language } from '@/lib/types'
-import { Loader2, Code2 } from 'lucide-react'
+import { Loader2, Search, Plus, Code2 } from 'lucide-react'
 import { useDebounce } from '@/hooks/use-debounce'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
@@ -16,6 +18,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedSnippet, setSelectedSnippet] = useState<SnippetWithTags | null>(null)
   const [editingSnippet, setEditingSnippet] = useState<SnippetWithTags | null>(null)
@@ -25,6 +28,7 @@ export default function DashboardPage() {
   const queryParams = new URLSearchParams()
   if (debouncedSearch) queryParams.set('search', debouncedSearch)
   if (selectedTagIds.length > 0) queryParams.set('tags', selectedTagIds.join(','))
+  if (selectedLanguage) queryParams.set('language', selectedLanguage)
   
   const { data, error, mutate, isLoading } = useSWR<{ snippets: SnippetWithTags[]; tags: Tag[] }>(
     `/api/snippets?${queryParams.toString()}`,
@@ -34,25 +38,6 @@ export default function DashboardPage() {
 
   const snippets = data?.snippets || []
   const tags = data?.tags || []
-
-  const handleTagToggle = (tagId: string) => {
-    setSelectedTagIds(prev =>
-      prev.includes(tagId)
-        ? prev.filter(id => id !== tagId)
-        : [...prev, tagId]
-    )
-  }
-
-  const handleCreateTag = async (name: string) => {
-    const res = await fetch('/api/tags', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
-    })
-    if (res.ok) {
-      mutate()
-    }
-  }
 
   const handleSaveSnippet = useCallback(async (snippetData: {
     title: string
@@ -102,62 +87,90 @@ export default function DashboardPage() {
     setIsDialogOpen(true)
   }
 
+  const snippetCount = snippets.length
+
   return (
-    <div className="min-h-svh bg-background">
-      <DashboardHeader
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+    <div className="flex min-h-svh bg-background">
+      {/* Sidebar */}
+      <DashboardSidebar
+        selectedLanguage={selectedLanguage}
+        onLanguageSelect={setSelectedLanguage}
         onNewSnippet={handleNewSnippet}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-        <div className="flex gap-6">
-          {/* Sidebar */}
-          <aside className="hidden lg:block w-64 shrink-0">
-            <TagFilter
-              tags={tags}
-              selectedTagIds={selectedTagIds}
-              onTagToggle={handleTagToggle}
-              onCreateTag={handleCreateTag}
-            />
-          </aside>
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
+        <div className="p-6 lg:p-8">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">My Snippets</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {snippetCount} {snippetCount === 1 ? 'snippet' : 'snippets'} saved
+              </p>
+            </div>
+            <Button
+              onClick={handleNewSnippet}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Snippet
+            </Button>
+          </div>
 
-          {/* Main content */}
-          <main className="flex-1 min-w-0">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          {/* Search */}
+          <div className="relative mb-5">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search snippets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full max-w-2xl pl-10 bg-input border-border"
+            />
+          </div>
+
+          {/* Language Filter Chips */}
+          <div className="mb-6">
+            <LanguageFilter
+              selectedLanguage={selectedLanguage}
+              onLanguageSelect={setSelectedLanguage}
+            />
+          </div>
+
+          {/* Snippets Grid */}
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <p className="text-destructive">Failed to load snippets</p>
+            </div>
+          ) : snippets.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <div className="mb-3 text-muted-foreground/50">
+                <Code2 className="h-12 w-12 mx-auto" strokeWidth={1} />
               </div>
-            ) : error ? (
-              <div className="text-center py-20">
-                <p className="text-destructive-foreground">Failed to load snippets</p>
-              </div>
-            ) : snippets.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary">
-                  <Code2 className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-medium text-foreground">No snippets yet</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {debouncedSearch || selectedTagIds.length > 0
-                    ? 'No snippets match your filters'
-                    : 'Create your first snippet to get started'}
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {snippets.map((snippet) => (
-                  <SnippetCard
-                    key={snippet.id}
-                    snippet={snippet}
-                    onClick={() => setSelectedSnippet(snippet)}
-                  />
-                ))}
-              </div>
-            )}
-          </main>
+              <p className="text-muted-foreground">
+                {debouncedSearch || selectedLanguage
+                  ? 'No snippets found'
+                  : 'No snippets yet'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {snippets.map((snippet) => (
+                <SnippetCard
+                  key={snippet.id}
+                  snippet={snippet}
+                  onClick={() => setSelectedSnippet(snippet)}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      </main>
 
       {/* Snippet Dialog */}
       <SnippetDialog

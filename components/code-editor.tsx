@@ -11,6 +11,36 @@ interface CodeEditorProps {
   className?: string
 }
 
+const languageMap: Record<string, string> = {
+  javascript: 'javascript',
+  typescript: 'typescript',
+  python: 'python',
+  rust: 'rust',
+  go: 'go',
+  css: 'css',
+  html: 'markup',
+  sql: 'sql',
+  bash: 'bash',
+  java: 'java',
+  cpp: 'cpp',
+  c: 'c',
+  csharp: 'csharp',
+  ruby: 'ruby',
+  php: 'php',
+  swift: 'swift',
+  kotlin: 'kotlin',
+  scala: 'scala',
+  haskell: 'haskell',
+  lua: 'lua',
+  perl: 'perl',
+  r: 'r',
+  assembly: 'nasm',
+  json: 'json',
+  yaml: 'yaml',
+  markdown: 'markdown',
+  text: 'markup',
+}
+
 export function CodeEditor({
   value,
   onChange,
@@ -18,7 +48,7 @@ export function CodeEditor({
   readOnly = false,
   className = '',
 }: CodeEditorProps) {
-  const prismLanguage = language === 'text' ? 'markup' : language
+  const prismLanguage = languageMap[language] || 'markup'
 
   if (readOnly) {
     return (

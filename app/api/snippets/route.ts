@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const search = searchParams.get('search') || ''
   const tagIds = searchParams.get('tags')?.split(',').filter(Boolean) || []
+  const language = searchParams.get('language') || ''
 
   // Get snippets
   let query = supabase
@@ -22,6 +23,10 @@ export async function GET(request: NextRequest) {
 
   if (search) {
     query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,current_content.ilike.%${search}%`)
+  }
+
+  if (language) {
+    query = query.eq('language', language)
   }
 
   const { data: snippets, error } = await query
