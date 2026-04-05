@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -107,6 +108,9 @@ export function SnippetDialog({
           <DialogTitle className="text-card-foreground">
             {isEditing ? 'Edit Snippet' : 'Create New Snippet'}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing ? 'Make changes to your snippet and save a new version.' : 'Add a new code snippet to your collection.'}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="grid gap-4 sm:grid-cols-2">
