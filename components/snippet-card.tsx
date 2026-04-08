@@ -27,8 +27,8 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
   const previewContent = snippet.current_content.split('\n').slice(0, 6).join('\n')
 
   return (
-    <Card 
-      className="border-border bg-card hover:bg-secondary/50 cursor-pointer transition-colors group"
+    <Card
+      className="glass border-white/10 cursor-pointer hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 group"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -50,7 +50,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
             onClick={handleCopy}
           >
             {copied ? (
-              <Check className="h-4 w-4 text-emerald-500" />
+              <Check className="h-4 w-4 text-green-500" />
             ) : (
               <Copy className="h-4 w-4" />
             )}

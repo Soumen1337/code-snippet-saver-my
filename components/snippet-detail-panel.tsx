@@ -122,7 +122,7 @@ export function SnippetDetailPanel({
                   <Button onClick={handleCopy} variant="outline" size="sm">
                     {copied ? (
                       <>
-                        <Check className="h-4 w-4 mr-2 text-emerald-500" />
+                        <Check className="h-4 w-4 mr-2 text-green-500" />
                         Copied
                       </>
                     ) : (
@@ -140,7 +140,7 @@ export function SnippetDetailPanel({
                     onClick={() => setShowDeleteDialog(true)}
                     variant="outline"
                     size="sm"
-                    className="text-destructive-foreground hover:bg-destructive/10"
+                    className="text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete

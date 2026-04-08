@@ -175,7 +175,7 @@ export function SnippetDialog({
                     variant={selectedTagIds.includes(tag.id) ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => toggleTag(tag.id)}
-                    className={selectedTagIds.includes(tag.id) ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
+                    className={selectedTagIds.includes(tag.id) ? 'bg-primary hover:bg-primary/90' : ''}
                   >
                     {tag.name}
                   </Button>
@@ -209,7 +209,7 @@ export function SnippetDialog({
             <Button
               type="submit"
               disabled={isLoading || !title.trim() || !content.trim()}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="gradient-bg hover:opacity-90 text-white"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEditing ? 'Save Changes' : 'Create Snippet'}

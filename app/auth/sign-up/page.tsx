@@ -60,7 +60,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-center gap-2 text-foreground">
-            <Code2 className="h-8 w-8 text-emerald-500" />
+            <Code2 className="h-8 w-8 text-primary" />
             <span className="text-xl font-semibold">SnippetVault</span>
           </div>
           <Card className="border-border bg-card">
@@ -114,7 +114,7 @@ export default function SignUpPage() {
                   Already have an account?{' '}
                   <Link
                     href="/auth/login"
-                    className="text-emerald-500 underline underline-offset-4 hover:text-emerald-400"
+                    className="text-primary underline underline-offset-4 hover:text-primary/70"
                   >
                     Login
                   </Link>

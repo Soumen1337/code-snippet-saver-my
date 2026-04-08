@@ -9,14 +9,14 @@ export default function HomePage() {
       <header className="border-b border-border">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-2">
-            <Code2 className="h-7 w-7 text-emerald-500" />
-            <span className="text-lg font-semibold text-foreground">SnippetVault</span>
+            <Code2 className="h-7 w-7 text-primary" />
+            <span className="text-lg font-semibold gradient-text">SnippetVault</span>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
               <Link href="/auth/login">Login</Link>
             </Button>
-            <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button asChild className="gradient-bg hover:opacity-90 text-white">
               <Link href="/auth/sign-up">Get Started</Link>
             </Button>
           </div>
@@ -33,14 +33,14 @@ export default function HomePage() {
             </div>
             <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Save, organize, and track
-              <span className="text-emerald-500"> code snippets</span>
+              <span className="gradient-text"> code snippets</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground">
               Never lose track of your evolving code snippets. SnippetVault provides Git-like version history, 
               powerful search, and smart tagging to keep your code organized.
             </p>
             <div className="mt-10 flex items-center justify-center gap-4">
-              <Button size="lg" asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
                 <Link href="/auth/sign-up">Start saving snippets</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
@@ -105,7 +105,7 @@ export default function HomePage() {
               Join developers who trust SnippetVault to manage their code snippets.
             </p>
             <div className="mt-8">
-              <Button size="lg" asChild className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
                 <Link href="/auth/sign-up">Get started for free</Link>
               </Button>
             </div>
@@ -139,8 +139,8 @@ function FeatureCard({
   description: string
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-6">
-      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+    <div className="glass rounded-lg p-6 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200">
+      <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
         {icon}
       </div>
       <h3 className="mb-2 font-semibold text-card-foreground">{title}</h3>

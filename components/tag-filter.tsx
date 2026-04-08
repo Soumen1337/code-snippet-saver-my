@@ -66,7 +66,7 @@ export function TagFilter({
             size="sm"
             onClick={handleCreateTag}
             disabled={!newTagName.trim()}
-            className="h-8 bg-emerald-600 hover:bg-emerald-700"
+            className="h-8 bg-primary hover:bg-primary/90"
           >
             Add
           </Button>
@@ -83,7 +83,7 @@ export function TagFilter({
               variant={selectedTagIds.includes(tag.id) ? 'default' : 'outline'}
               className={`cursor-pointer transition-colors ${
                 selectedTagIds.includes(tag.id)
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
                   : 'hover:bg-secondary'
               }`}
               onClick={() => onTagToggle(tag.id)}

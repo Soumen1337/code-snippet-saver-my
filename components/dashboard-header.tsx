@@ -29,7 +29,7 @@ export function DashboardHeader({
     <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex items-center gap-2">
-          <Code2 className="h-7 w-7 text-emerald-500" />
+          <Code2 className="h-7 w-7 text-primary" />
           <span className="text-lg font-semibold text-foreground hidden sm:inline">SnippetVault</span>
         </div>
 
@@ -49,7 +49,7 @@ export function DashboardHeader({
         <div className="flex items-center gap-2">
           <Button
             onClick={onNewSnippet}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="gradient-bg hover:opacity-90 text-white"
           >
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">New Snippet</span>

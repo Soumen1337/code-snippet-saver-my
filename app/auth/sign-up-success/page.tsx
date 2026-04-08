@@ -14,13 +14,13 @@ export default function SignUpSuccessPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-center gap-2 text-foreground">
-            <Code2 className="h-8 w-8 text-emerald-500" />
+            <Code2 className="h-8 w-8 text-primary" />
             <span className="text-xl font-semibold">SnippetVault</span>
           </div>
           <Card className="border-border bg-card">
             <CardHeader className="text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
-                <Mail className="h-6 w-6 text-emerald-500" />
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Mail className="h-6 w-6 text-primary" />
               </div>
               <CardTitle className="text-2xl text-card-foreground">
                 Check your email
@@ -37,7 +37,7 @@ export default function SignUpSuccessPage() {
               <div className="mt-6">
                 <Link
                   href="/auth/login"
-                  className="text-sm text-emerald-500 underline underline-offset-4 hover:text-emerald-400"
+                  className="text-sm text-primary underline underline-offset-4 hover:text-primary/70"
                 >
                   Back to login
                 </Link>

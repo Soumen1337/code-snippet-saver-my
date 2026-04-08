@@ -65,7 +65,7 @@ export function VersionHistory({
                 key={version.id}
                 className={`relative flex items-start gap-4 p-3 rounded-lg transition-colors cursor-pointer ${
                   selected
-                    ? 'bg-emerald-500/10 border border-emerald-500/50'
+                    ? 'bg-primary/10 border border-primary/50'
                     : 'hover:bg-secondary'
                 }`}
                 onClick={() => onSelectVersion(version)}
@@ -74,7 +74,7 @@ export function VersionHistory({
                 <div
                   className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                     selected
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-secondary text-muted-foreground'
                   }`}
                 >
@@ -91,7 +91,7 @@ export function VersionHistory({
                       v{version.version_number}
                     </Badge>
                     {index === 0 && (
-                      <Badge className="bg-emerald-600 text-white shrink-0">
+                      <Badge className="gradient-bg text-white shrink-0">
                         Latest
                       </Badge>
                     )}
@@ -105,7 +105,7 @@ export function VersionHistory({
                 </div>
 
                 {selected && (
-                  <Check className="h-5 w-5 text-emerald-500 shrink-0" />
+                  <Check className="h-5 w-5 text-primary shrink-0" />
                 )}
               </div>
             )

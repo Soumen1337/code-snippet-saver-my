@@ -46,7 +46,7 @@ export function DiffViewer({ oldVersion, newVersion, language }: DiffViewerProps
           <Badge variant="outline">v{newer.version_number}</Badge>
         </div>
         <div className="flex items-center gap-3 text-sm">
-          <span className="text-emerald-500">+{stats.added} added</span>
+          <span className="text-green-500 font-bold">+{stats.added} added</span>
           <span className="text-red-500">-{stats.removed} removed</span>
         </div>
       </div>
@@ -89,16 +89,16 @@ function DiffBlock({ change }: { change: Change }) {
   if (lines.length === 0) return null
 
   const bgColor = change.added
-    ? 'bg-emerald-500/20'
+    ? 'bg-green-500/20'
     : change.removed
     ? 'bg-red-500/20'
     : ''
 
   const textColor = change.added
-    ? 'text-emerald-400'
+    ? 'text-green-400'
     : change.removed
     ? 'text-red-400'
-    : 'text-foreground/80'
+    : 'text-slate-300'
 
   const prefix = change.added ? '+' : change.removed ? '-' : ' '
 
