@@ -1082,7 +1082,7 @@ This plan is split into **two phases**:
   - "Latest" badge: gradient background  
   > Commit: `design(history): redesign version history timeline with violet accents`
 
-- [x] **30.4** Redesign the create/edit dialog (`components/snippet-dialog.tsx`)  
+- [ ] **30.4** Redesign the create/edit dialog (`components/snippet-dialog.tsx`)  
   - Dark glass dialog background  
   - Form inputs: glass style with violet focus ring  
   - Tag toggle buttons: glass default, gradient active  

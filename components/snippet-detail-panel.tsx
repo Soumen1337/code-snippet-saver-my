@@ -90,7 +90,7 @@ export function SnippetDetailPanel({
               <SheetHeader className="pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <SheetTitle className="text-xl gradient-text truncate">
+                    <SheetTitle className="text-xl font-semibold text-foreground truncate">
                       {snippet.title}
                     </SheetTitle>
                     {snippet.description && (
@@ -111,7 +111,7 @@ export function SnippetDetailPanel({
 
                 <div className="flex items-center gap-2 flex-wrap mt-2">
                   <Badge variant="secondary">{snippet.language}</Badge>
-                  {snippet.tags.map((tag) => (
+                  {(snippet.tags ?? []).map((tag) => (
                     <Badge key={tag.id} variant="outline">
                       {tag.name}
                     </Badge>
@@ -119,7 +119,7 @@ export function SnippetDetailPanel({
                 </div>
 
                 <div className="flex items-center gap-2 mt-4">
-                  <Button onClick={handleCopy} variant="outline" size="sm" className="glass border border-white/10 hover:border-primary/50">
+                  <Button onClick={handleCopy} variant="outline" size="sm" className="hover:border-primary/50 transition-colors">
                     {copied ? (
                       <>
                         <Check className="h-4 w-4 mr-2 text-green-500" />
@@ -132,7 +132,7 @@ export function SnippetDetailPanel({
                       </>
                     )}
                   </Button>
-                  <Button onClick={onEdit} variant="outline" size="sm" className="glass border border-white/10 hover:border-primary/50">
+                  <Button onClick={onEdit} variant="outline" size="sm" className="hover:border-primary/50 transition-colors">
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>

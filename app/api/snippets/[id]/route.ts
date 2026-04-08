@@ -124,17 +124,22 @@ export async function PUT(
 
   // Update tags
   await supabase.from('snippet_tags').delete().eq('snippet_id', id)
-  
+
   if (tagIds && tagIds.length > 0) {
     await supabase.from('snippet_tags').insert(
-      tagIds.map((tagId: string) => ({
-        snippet_id: id,
-        tag_id: tagId,
-      }))
+      tagIds.map((tagId: string) => ({ snippet_id: id, tag_id: tagId }))
     )
   }
 
-  return NextResponse.json({ snippet })
+  // Fetch tags so response matches SnippetWithTags shape
+  const { data: snippetTags } = await supabase
+    .from('snippet_tags')
+    .select('tags(id, name)')
+    .eq('snippet_id', id)
+
+  const tags = (snippetTags ?? []).map((st: { tags: { id: string; name: string } | null }) => st.tags).filter(Boolean)
+
+  return NextResponse.json({ snippet: { ...snippet, tags } })
 }
 
 export async function DELETE(

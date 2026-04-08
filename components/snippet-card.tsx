@@ -39,7 +39,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
 
   return (
     <Card
-      className="glass border-white/10 cursor-pointer hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 group"
+      className="bg-card border border-border hover:border-primary/40 hover:bg-card/80 rounded-xl cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 group"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -57,7 +57,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 glass border border-white/10 hover:border-primary/50"
+            className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border hover:border-primary/50"
             onClick={handleCopy}
           >
             {copied ? (
@@ -83,7 +83,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
               {snippet.language}
             </span>
             {snippet.tags.slice(0, 2).map((tag) => (
-              <span key={tag.id} className="text-xs px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground shrink-0">
+              <span key={tag.id} className="text-xs px-2 py-0.5 rounded-full bg-secondary border border-border text-muted-foreground shrink-0">
                 {tag.name}
               </span>
             ))}

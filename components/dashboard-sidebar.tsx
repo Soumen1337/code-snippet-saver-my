@@ -63,7 +63,7 @@ export function DashboardSidebar({
             <Code2 className="h-4 w-4" />
           </div>
           {!isCollapsed && (
-            <span className="font-semibold gradient-text">SnippetVault</span>
+            <span className="font-semibold text-foreground">SnippetVault</span>
           )}
         </div>
         <Button

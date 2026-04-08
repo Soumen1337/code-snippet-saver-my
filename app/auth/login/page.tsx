@@ -36,10 +36,10 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
-      <div className="glass rounded-2xl border border-white/10 p-8 w-full max-w-md shadow-2xl">
+      <div className="bg-card border border-border rounded-2xl p-8 w-full max-w-md shadow-2xl">
         <div className="flex items-center justify-center gap-2 mb-6">
           <Code2 className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold gradient-text">SnippetVault</span>
+          <span className="text-xl font-semibold text-foreground">SnippetVault</span>
         </div>
         <h1 className="text-2xl font-bold text-foreground mb-1">Welcome back</h1>
         <p className="text-sm text-muted-foreground mb-6">Enter your credentials to login</p>

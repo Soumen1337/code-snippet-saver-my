@@ -2,9 +2,10 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Code2, Plus, LogOut, Search } from 'lucide-react'
+import { Code2, Plus, LogOut, Search, Sun, Moon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
 
 interface DashboardHeaderProps {
   searchQuery: string
@@ -18,6 +19,7 @@ export function DashboardHeader({
   onNewSnippet,
 }: DashboardHeaderProps) {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -34,14 +36,14 @@ export function DashboardHeader({
         </div>
 
         <div className="flex flex-1 max-w-md items-center">
-          <div className="glass rounded-lg w-full relative">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search snippets..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-10 bg-input/50 backdrop-blur-sm border-border focus:border-primary transition-all"
+              className="w-full pl-10"
             />
           </div>
         </div>
@@ -53,6 +55,9 @@ export function DashboardHeader({
           >
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">New Snippet</span>
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} suppressHydrationWarning>
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           <Button variant="ghost" size="icon" onClick={handleSignOut}>
             <LogOut className="h-4 w-4" />
