@@ -103,7 +103,7 @@ export function SnippetDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto glass border border-white/10">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-border">
         <DialogHeader>
           <DialogTitle className="text-card-foreground">
             {isEditing ? 'Edit Snippet' : 'Create New Snippet'}
@@ -122,13 +122,13 @@ export function SnippetDialog({
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="My awesome snippet"
                 required
-                className="bg-input/50 backdrop-blur-sm border-border focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all"
+                className="border-border focus:border-primary transition-colors"
               />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="language">Language</Label>
               <Select value={language} onValueChange={(v) => setLanguage(v as Language)}>
-                <SelectTrigger className="bg-input/50 backdrop-blur-sm border-border focus:border-primary transition-all">
+                <SelectTrigger className="border-border focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -150,7 +150,7 @@ export function SnippetDialog({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What does this snippet do?"
               rows={2}
-              className="bg-input/50 backdrop-blur-sm border-border focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all resize-none"
+              className="border-border focus:border-primary transition-colors resize-none"
             />
           </div>
 
@@ -175,7 +175,7 @@ export function SnippetDialog({
                     variant="outline"
                     size="sm"
                     onClick={() => toggleTag(tag.id)}
-                    className={selectedTagIds.includes(tag.id) ? 'gradient-bg text-white border-transparent hover:opacity-90' : 'glass border border-border hover:border-primary/50'}
+                    className={selectedTagIds.includes(tag.id) ? 'gradient-bg text-white border-transparent hover:opacity-90' : 'bg-secondary border-border hover:border-primary/50'}
                   >
                     {tag.name}
                   </Button>
@@ -192,7 +192,7 @@ export function SnippetDialog({
                 value={commitMessage}
                 onChange={(e) => setCommitMessage(e.target.value)}
                 placeholder="What changed in this version?"
-                className="bg-input/50 backdrop-blur-sm border-border focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all"
+                className="border-border focus:border-primary transition-colors"
               />
             </div>
           )}

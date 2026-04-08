@@ -84,7 +84,7 @@ export function SnippetDetailPanel({
   return (
     <>
       <Sheet open={!!snippet} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-card border-border backdrop-blur-xl">
+        <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-card border-border">
           {snippet && (
             <>
               <SheetHeader className="pb-4">
