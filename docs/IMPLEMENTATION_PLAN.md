@@ -759,13 +759,13 @@ This plan is split into **two phases**:
 
 **Goal:** The current API routes accept any request body without validation — malformed or missing data goes straight to the database. Add `zod` schema validation to every API route that accepts a request body. This is the single most important backend improvement.
 
-- [ ] **21.1** Install the `zod` library  
+- [x] **21.1** Install the `zod` library  
   ```
   npm install zod
   ```
   > Commit: `chore: install zod for schema validation`
 
-- [ ] **21.2** Add Zod schema validation to `POST /api/snippets`  
+- [x] **21.2** Add Zod schema validation to `POST /api/snippets`  
   - Define schema: `title` (string, min 1), `language` (string, min 1), `content` (string, min 1), `description` (string optional), `commitMessage` (string optional), `tagIds` (array of UUID strings, optional)  
   - Parse request body with the schema  
   - Return `400` with field-specific error messages if validation fails  
@@ -781,17 +781,17 @@ This plan is split into **two phases**:
   ```
   > Commit: `feat(api): add Zod validation to POST /api/snippets`
 
-- [ ] **21.3** Add Zod schema validation to `PUT /api/snippets/[id]`  
+- [x] **21.3** Add Zod schema validation to `PUT /api/snippets/[id]`  
   - Same schema as POST — validate before any DB operation  
   - Return `400` with clear error message  
   > Commit: `feat(api): add Zod validation to PUT /api/snippets/[id]`
 
-- [ ] **21.4** Add Zod schema validation to `POST /api/tags`  
+- [x] **21.4** Add Zod schema validation to `POST /api/tags`  
   - Schema: `name` (string, min 1, max 50)  
   - Replace the current manual `if (!name || typeof name !== 'string')` check  
   > Commit: `feat(api): add Zod validation to POST /api/tags`
 
-- [ ] **21.5** Test that invalid requests are now properly rejected  
+- [x] **21.5** Test that invalid requests are now properly rejected  
   - Send POST with empty title → expect `400` with `"Title is required"`  
   - Send POST with no body → expect `400`  
   - Send POST with valid data → expect `200` as before  
@@ -842,7 +842,7 @@ This plan is split into **two phases**:
 
 **Goal:** Currently the API runs 3 separate queries (snippets, snippet_tags, tags) and joins them in JavaScript memory. This is inefficient and means tag filtering happens client-side after all data is returned. Move tag filtering into a single server-side SQL JOIN.
 
-- [ ] **23.1** Rewrite `GET /api/snippets` to use a single Supabase relational query  
+- [x] **23.1** Rewrite `GET /api/snippets` to use a single Supabase relational query  
   - Use Supabase's nested select syntax to join tags in one query:  
   ```typescript
   const { data: snippets } = await supabase
@@ -859,17 +859,17 @@ This plan is split into **two phases**:
   - Map the nested result to the flat `SnippetWithTags` shape the frontend expects  
   > Commit: `perf(api): rewrite snippet listing to use single relational JOIN query`
 
-- [ ] **23.2** Move tag AND-filtering to the database level  
+- [x] **23.2** Move tag AND-filtering to the database level  
   - When `tags` query param is present, add a filter at the DB level instead of in JS  
   - Each tag ID requires: `snippet must be in snippet_tags WHERE tag_id = X`  
   > Commit: `perf(api): move tag AND-filtering from client JS to DB query`
 
-- [ ] **23.3** Remove the now-unused separate `snippet_tags` and `tags` fetches  
+- [x] **23.3** Remove the now-unused separate `snippet_tags` and `tags` fetches  
   - The route previously did 3 queries; it should now do 1  
   - Verify query count dropped by checking Supabase dashboard → Logs  
   > Commit: `perf(api): remove redundant separate snippet_tags and tags queries`
 
-- [ ] **23.4** Test that filtering still works correctly after the refactor  
+- [x] **23.4** Test that filtering still works correctly after the refactor  
   - Create a snippet with tag "React" → search by tag "React" → it should appear  
   - Create a snippet with no tags → search by any tag → it should NOT appear  
   - Search + language + tags combined → should still work  
@@ -881,21 +881,21 @@ This plan is split into **two phases**:
 
 **Goal:** Right now when you create, update, or delete a snippet, nothing tells you it succeeded. The UI just re-renders silently. Add toast notifications for user actions using the `sonner` library (already installed).
 
-- [ ] **24.1** Wire up the `<Toaster>` component in the root layout (`app/layout.tsx`)  
+- [x] **24.1** Wire up the `<Toaster>` component in the root layout (`app/layout.tsx`)  
   - Import `Toaster` from `sonner`  
   - Add `<Toaster position="bottom-right" richColors />` to the layout  
   > Commit: `feat(ux): add Sonner toast provider to root layout`
 
-- [ ] **24.2** Add success toasts in the dashboard `handleSaveSnippet` function  
+- [x] **24.2** Add success toasts in the dashboard `handleSaveSnippet` function  
   - On create success: `toast.success('Snippet created!')`  
   - On update success: `toast.success('Snippet updated!')`  
   > Commit: `feat(ux): add success toasts for snippet create and update`
 
-- [ ] **24.3** Add success toast for snippet deletion in the detail panel  
+- [x] **24.3** Add success toast for snippet deletion in the detail panel  
   - On delete success: `toast.success('Snippet deleted')`  
   > Commit: `feat(ux): add success toast for snippet deletion`
 
-- [ ] **24.4** Add error toasts for API failures  
+- [x] **24.4** Add error toasts for API failures  
   - If save fails: `toast.error('Failed to save snippet. Please try again.')`  
   - If delete fails: `toast.error('Failed to delete snippet.')`  
   - Replace the current silent failure (nothing happens if API returns error)  

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { SnippetWithTags, Tag, Language } from '@/lib/types'
 import { Loader2, Search, Plus, Code2 } from 'lucide-react'
 import { useDebounce } from '@/hooks/use-debounce'
+import { toast } from 'sonner'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -58,22 +59,28 @@ export default function DashboardPage() {
     })
 
     if (res.ok) {
+      toast.success(editingSnippet ? 'Snippet updated!' : 'Snippet created!')
       mutate()
       setEditingSnippet(null)
       if (selectedSnippet && editingSnippet?.id === selectedSnippet.id) {
         const updatedData = await res.json()
         setSelectedSnippet(updatedData.snippet)
       }
+    } else {
+      toast.error('Failed to save snippet. Please try again.')
     }
   }, [editingSnippet, selectedSnippet, mutate])
 
   const handleDeleteSnippet = async (id: string) => {
     const res = await fetch(`/api/snippets/${id}`, { method: 'DELETE' })
     if (res.ok) {
+      toast.success('Snippet deleted')
       mutate()
       if (selectedSnippet?.id === id) {
         setSelectedSnippet(null)
       }
+    } else {
+      toast.error('Failed to delete snippet.')
     }
   }
 

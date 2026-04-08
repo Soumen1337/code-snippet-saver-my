@@ -1,5 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+const snippetSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  language: z.string().min(1, 'Language is required'),
+  content: z.string().min(1, 'Content is required'),
+  description: z.string().optional(),
+  commitMessage: z.string().optional(),
+  tagIds: z.array(z.string().uuid()).optional().default([]),
+})
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient()
@@ -14,61 +24,38 @@ export async function GET(request: NextRequest) {
   const tagIds = searchParams.get('tags')?.split(',').filter(Boolean) || []
   const language = searchParams.get('language') || ''
 
-  // Get snippets
+  // Single JOIN query — snippets + tags in one round trip
   let query = supabase
     .from('snippets')
-    .select('*')
+    .select('*, snippet_tags(tags(id, name))')
     .eq('user_id', user.id)
     .order('updated_at', { ascending: false })
 
-  if (search) {
-    query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,current_content.ilike.%${search}%`)
-  }
-
-  if (language) {
-    query = query.eq('language', language)
-  }
+  if (search) query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,current_content.ilike.%${search}%`)
+  if (language) query = query.eq('language', language)
 
   const { data: snippets, error } = await query
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  // Flatten nested join shape → SnippetWithTags[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let result = (snippets ?? []).map((s: any) => ({
+    ...s,
+    tags: (s.snippet_tags ?? []).map((st: any) => st.tags).filter(Boolean),
+    snippet_tags: undefined,
+  }))
 
-  // Get tags for each snippet
-  const snippetIds = snippets?.map(s => s.id) || []
-  
-  const { data: snippetTags } = await supabase
-    .from('snippet_tags')
-    .select('snippet_id, tag_id')
-    .in('snippet_id', snippetIds.length > 0 ? snippetIds : [''])
-
-  const { data: allTags } = await supabase
-    .from('tags')
-    .select('*')
-    .eq('user_id', user.id)
-
-  // Build snippet with tags
-  const tagMap = new Map(allTags?.map(t => [t.id, t]) || [])
-  const snippetsWithTags = snippets?.map(snippet => {
-    const tagIdsForSnippet = snippetTags
-      ?.filter(st => st.snippet_id === snippet.id)
-      .map(st => st.tag_id) || []
-    const tags = tagIdsForSnippet
-      .map(id => tagMap.get(id))
-      .filter(Boolean)
-    return { ...snippet, tags }
-  }) || []
-
-  // Filter by tags if specified
-  let filteredSnippets = snippetsWithTags
+  // Server-side AND-filter by tag IDs
   if (tagIds.length > 0) {
-    filteredSnippets = snippetsWithTags.filter(snippet =>
-      tagIds.every(tagId => snippet.tags.some(t => t.id === tagId))
+    result = result.filter(s =>
+      tagIds.every(id => s.tags.some((t: { id: string }) => t.id === id))
     )
   }
 
-  return NextResponse.json({ snippets: filteredSnippets, tags: allTags || [] })
+  // Fetch all user tags for the sidebar filter list (single query, cheap)
+  const { data: allTags } = await supabase.from('tags').select('*').eq('user_id', user.id).order('name')
+
+  return NextResponse.json({ snippets: result, tags: allTags ?? [] })
 }
 
 export async function POST(request: NextRequest) {
@@ -80,7 +67,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const { title, description, language, content, commitMessage, tagIds } = body
+  const parsed = snippetSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.errors[0]?.message || 'Invalid request body' },
+      { status: 400 }
+    )
+  }
+  const { title, description, language, content, commitMessage, tagIds } = parsed.data
 
   // Create snippet
   const { data: snippet, error } = await supabase

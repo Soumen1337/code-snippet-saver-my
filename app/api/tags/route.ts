@@ -1,5 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+const tagSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(50, 'Name must be 50 characters or less'),
+})
 
 export async function GET() {
   const supabase = await createClient()
@@ -31,11 +36,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const { name } = body
-
-  if (!name || typeof name !== 'string') {
-    return NextResponse.json({ error: 'Name is required' }, { status: 400 })
+  const parsed = tagSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.errors[0]?.message || 'Invalid request body' },
+      { status: 400 }
+    )
   }
+  const { name } = parsed.data
 
   const { data: tag, error } = await supabase
     .from('tags')

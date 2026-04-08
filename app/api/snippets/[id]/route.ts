@@ -1,5 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+const snippetSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  language: z.string().min(1, 'Language is required'),
+  content: z.string().min(1, 'Content is required'),
+  description: z.string().optional(),
+  commitMessage: z.string().optional(),
+  tagIds: z.array(z.string().uuid()).optional().default([]),
+})
 
 export async function GET(
   request: NextRequest,
@@ -53,7 +63,14 @@ export async function PUT(
   }
 
   const body = await request.json()
-  const { title, description, language, content, commitMessage, tagIds } = body
+  const parsed = snippetSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.errors[0]?.message || 'Invalid request body' },
+      { status: 400 }
+    )
+  }
+  const { title, description, language, content, commitMessage, tagIds } = parsed.data
 
   // Get existing snippet
   const { data: existing } = await supabase
