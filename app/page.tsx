@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Code2, History, Search, Tag } from 'lucide-react'
+import { Code2, History, Search } from 'lucide-react'
 import Link from 'next/link'
 import { LandingHeader } from '@/components/landing-header'
 
@@ -10,31 +10,35 @@ export default function HomePage() {
 
       <main>
         {/* Hero */}
-        <section className="py-24 px-6">
+        <section className="py-28 px-6">
           <div className="mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               {/* Hero text */}
               <div>
-                <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-[1.08]">
+                <div className="animate-in delay-100 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-8 font-medium">
+                  <Code2 className="h-3.5 w-3.5" />
+                  Personal code vault for developers
+                </div>
+                <h1 className="animate-in delay-200 text-5xl font-black tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-[1.05]">
                   Your code.<br />Your vault.<br />
                   <span className="text-primary">Organized.</span>
                 </h1>
-                <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">
+                <p className="animate-in delay-300 mt-7 max-w-xl text-lg text-muted-foreground leading-relaxed">
                   Save snippets in 20+ languages, tag them, search instantly, and track every edit with built-in version history.
                 </p>
-                <div className="mt-10 flex items-center gap-4">
-                  <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
-                    <Link href="/auth/sign-up">Start for free →</Link>
+                <div className="animate-in delay-400 mt-10 flex items-center gap-4">
+                  <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white rounded-lg px-6">
+                    <Link href="/auth/sign-up">Get started for free →</Link>
                   </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link href="/auth/login">View demo</Link>
+                  <Button size="lg" variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
+                    <Link href="/auth/login">Sign in</Link>
                   </Button>
                 </div>
               </div>
 
               {/* Code preview card */}
-              <div className="hidden md:block">
-                <div className="bg-[#0d1117] rounded-2xl border border-white/10 p-5 shadow-2xl">
+              <div className="hidden md:block animate-in delay-300">
+                <div className="bg-[#0d1117] rounded-2xl border border-white/8 p-5 shadow-2xl shadow-black/40">
                   <div className="flex items-center gap-1.5 mb-4">
                     <span className="h-3 w-3 rounded-full bg-red-500/70" />
                     <span className="h-3 w-3 rounded-full bg-yellow-500/70" />
@@ -85,28 +89,31 @@ export default function HomePage() {
         {/* How it works */}
         <section id="how-it-works" className="border-t border-border py-24 px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-foreground mb-4">How it works</h2>
-            <p className="text-muted-foreground mb-16 max-w-xl">
+            <div className="scroll-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
+              Simple workflow
+            </div>
+            <h2 className="scroll-reveal text-3xl font-black text-foreground mb-4 tracking-tight">How it works</h2>
+            <p className="scroll-reveal text-muted-foreground mb-16 max-w-xl">
               Three steps from snippet to searchable, versioned knowledge base.
             </p>
             <div className="grid md:grid-cols-3 gap-12">
-              <div>
-                <div className="text-6xl font-bold text-muted-foreground/20 mb-4 font-mono leading-none">01</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Save</h3>
+              <div className="scroll-reveal scroll-reveal-delay-1">
+                <div className="text-5xl font-black text-primary/20 mb-5 font-mono leading-none">01</div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Save</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Write once, keep forever. Paste any code snippet with a title, language, and tags.
                 </p>
               </div>
-              <div>
-                <div className="text-6xl font-bold text-muted-foreground/20 mb-4 font-mono leading-none">02</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Organize</h3>
+              <div className="scroll-reveal scroll-reveal-delay-2">
+                <div className="text-5xl font-black text-primary/20 mb-5 font-mono leading-none">02</div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Organize</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Filter by language, search by keyword, or browse by tag. Find anything in seconds.
                 </p>
               </div>
-              <div>
-                <div className="text-6xl font-bold text-muted-foreground/20 mb-4 font-mono leading-none">03</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Track</h3>
+              <div className="scroll-reveal scroll-reveal-delay-3">
+                <div className="text-5xl font-black text-primary/20 mb-5 font-mono leading-none">03</div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Track</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Every edit is versioned automatically. Compare any two versions side-by-side with a diff viewer.
                 </p>
@@ -118,34 +125,37 @@ export default function HomePage() {
         {/* Features */}
         <section id="features" className="border-t border-border py-24 px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Built for developers</h2>
-            <p className="text-muted-foreground mb-16 max-w-xl">
-              Everything you need to maintain a personal library of reusable code.
+            <div className="scroll-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
+              Built for developers
+            </div>
+            <h2 className="scroll-reveal text-3xl font-black text-foreground mb-4 tracking-tight">Everything you need</h2>
+            <p className="scroll-reveal text-muted-foreground mb-16 max-w-xl">
+              A personal library of reusable code that works the way developers think.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-card border border-border rounded-xl p-6 space-y-3">
+              <div className="scroll-reveal scroll-reveal-delay-1 bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/30 transition-colors">
                 <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <Code2 className="h-5 w-5" />
                 </div>
-                <h3 className="font-semibold text-foreground">20+ Languages</h3>
+                <h3 className="font-bold text-foreground">20+ Languages</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Syntax highlighting for JavaScript, TypeScript, Python, Rust, Go, and more. Every language looks sharp.
                 </p>
               </div>
-              <div className="bg-card border border-border rounded-xl p-6 space-y-3">
+              <div className="scroll-reveal scroll-reveal-delay-2 bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/30 transition-colors">
                 <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <History className="h-5 w-5" />
                 </div>
-                <h3 className="font-semibold text-foreground">Version History</h3>
+                <h3 className="font-bold text-foreground">Version History</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Automatic versioning on every save with optional commit messages. Compare any two versions with a side-by-side diff viewer.
                 </p>
               </div>
-              <div className="bg-card border border-border rounded-xl p-6 space-y-3">
+              <div className="scroll-reveal scroll-reveal-delay-3 bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/30 transition-colors">
                 <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <Search className="h-5 w-5" />
                 </div>
-                <h3 className="font-semibold text-foreground">Instant Search</h3>
+                <h3 className="font-bold text-foreground">Instant Search</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Search by title, language, or tags. Results update as you type — no waiting, no full-page reloads.
                 </p>
@@ -155,16 +165,16 @@ export default function HomePage() {
         </section>
 
         {/* CTA */}
-        <section className="border-t border-border py-24 px-6">
+        <section className="border-t border-border py-28 px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-4xl font-bold text-foreground tracking-tight">
+            <h2 className="scroll-reveal text-4xl font-black text-foreground tracking-tight">
               Stop losing good snippets.
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="scroll-reveal mt-4 text-lg text-muted-foreground">
               Free forever. No credit card required.
             </p>
-            <div className="mt-8">
-              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
+            <div className="scroll-reveal mt-8">
+              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white rounded-lg px-8">
                 <Link href="/auth/sign-up">Create your vault →</Link>
               </Button>
             </div>
