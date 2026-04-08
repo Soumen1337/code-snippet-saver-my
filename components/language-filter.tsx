@@ -16,14 +16,14 @@ export function LanguageFilter({
   return (
     <div className="flex flex-wrap gap-2">
       <Button
-        variant={selectedLanguage === null ? 'default' : 'outline'}
+        variant="outline"
         size="sm"
         onClick={() => onLanguageSelect(null)}
         className={cn(
           'h-7 px-3 text-xs font-medium rounded-full',
           selectedLanguage === null
-            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-            : 'border-border hover:bg-secondary'
+            ? 'gradient-bg text-white border-transparent shadow-sm shadow-primary/30 hover:opacity-90'
+            : 'glass border border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all'
         )}
       >
         All
@@ -34,14 +34,14 @@ export function LanguageFilter({
         return (
           <Button
             key={lang}
-            variant={isSelected ? 'default' : 'outline'}
+            variant="outline"
             size="sm"
             onClick={() => onLanguageSelect(isSelected ? null : lang)}
             className={cn(
               'h-7 px-3 text-xs font-medium rounded-full',
               isSelected
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                : 'border-border hover:bg-secondary'
+                ? 'gradient-bg text-white border-transparent shadow-sm shadow-primary/30 hover:opacity-90'
+                : 'glass border border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all'
             )}
           >
             {langInfo?.label || lang}

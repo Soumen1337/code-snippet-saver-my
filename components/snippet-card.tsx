@@ -2,12 +2,23 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Copy, Clock, Check } from 'lucide-react'
 import { SnippetWithTags, Language } from '@/lib/types'
 import { CodeEditor } from './code-editor'
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { cn } from '@/lib/utils'
+
+const languageColors: Record<string, string> = {
+  javascript: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  typescript: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
+  python: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
+  rust: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
+  go: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+  css: 'bg-pink-500/15 text-pink-400 border-pink-500/30',
+  html: 'bg-red-500/15 text-red-400 border-red-500/30',
+  sql: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
+}
 
 interface SnippetCardProps {
   snippet: SnippetWithTags
@@ -46,7 +57,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 glass border border-white/10 hover:border-primary/50"
             onClick={handleCopy}
           >
             {copied ? (
@@ -68,13 +79,13 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
         </div>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 flex-wrap min-w-0">
-            <Badge variant="secondary" className="shrink-0">
+            <span className={cn('text-xs px-2 py-0.5 rounded-full border shrink-0', languageColors[snippet.language.toLowerCase()] ?? 'bg-secondary text-secondary-foreground border-border')}>
               {snippet.language}
-            </Badge>
+            </span>
             {snippet.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag.id} variant="outline" className="shrink-0">
+              <span key={tag.id} className="text-xs px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground shrink-0">
                 {tag.name}
-              </Badge>
+              </span>
             ))}
             {snippet.tags.length > 2 && (
               <span className="text-xs text-muted-foreground">

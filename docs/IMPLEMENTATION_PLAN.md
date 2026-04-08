@@ -926,7 +926,7 @@ This plan is split into **two phases**:
   - `.gradient-bg` — violet-to-cyan gradient background  
   > Commit: `design: add glassmorphism and gradient utility classes`
 
-- [ ] **25.3** Add ambient mesh gradient to the body background  
+- [x] **25.3** Add ambient mesh gradient to the body background  
   - Dark mesh: layered radial gradients in violet and cyan on a near-black base  
   - Should be subtle — not distracting, but gives depth  
   > Commit: `design: add ambient mesh gradient to app background`
@@ -960,7 +960,7 @@ This plan is split into **two phases**:
   - Primary button: `gradient-bg hover:opacity-90 text-white`  
   > Commit: `design(landing): apply gradient styles to CTA buttons`
 
-- [ ] **26.4** Add a subtle floating code snippet preview to the hero (visual element)  
+- [x] **26.4** Add a subtle floating code snippet preview to the hero (visual element)  
   - A small dark card showing a snippet of code with syntax highlighting  
   - Positioned to the right of the hero text  
   - Adds an authentic "developer tool" feel  
@@ -972,19 +972,19 @@ This plan is split into **two phases**:
 
 **Goal:** Make the login and sign-up pages feel premium and on-brand with the new design system.
 
-- [ ] **27.1** Redesign the auth page layout  
+- [x] **27.1** Redesign the auth page layout  
   - Centered card with `.glass` background on the ambient mesh  
   - Card has a subtle gradient border  
   - SnippetVault logo + gradient text at the top of the card  
   > Commit: `design(auth): redesign auth card layout with glassmorphism`
 
-- [ ] **27.2** Style the form inputs  
+- [x] **27.2** Style the form inputs  
   - Frosted glass input background  
   - Violet focus ring (`focus:ring-violet-500`)  
   - Smooth `transition-all` on focus  
   > Commit: `design(auth): style form inputs with glass background and violet focus ring`
 
-- [ ] **27.3** Style the submit button  
+- [x] **27.3** Style the submit button  
   - Full-width gradient button (violet → cyan)  
   - Loading spinner shown inside button when submitting  
   > Commit: `design(auth): apply gradient button style to auth form submit`
@@ -995,32 +995,32 @@ This plan is split into **two phases**:
 
 **Goal:** Overhaul the dashboard layout — the sidebar becomes a premium dark panel, and the main area gets the ambient mesh backdrop.
 
-- [ ] **28.1** Redesign the sidebar (`components/dashboard-sidebar.tsx`)  
+- [x] **28.1** Redesign the sidebar (`components/dashboard-sidebar.tsx`)  
   - Darker sidebar background — near black with a faint violet tint  
   - SnippetVault logo: gradient text on the brand name  
   - Active language item: left border accent in violet + subtle violet background  
   - "New Snippet" button: gradient border, glass background instead of solid  
   > Commit: `design(sidebar): redesign sidebar with dark glass and violet accents`
 
-- [ ] **28.2** Redesign the "New Snippet" primary button  
+- [x] **28.2** Redesign the "New Snippet" primary button  
   - Violet → cyan gradient fill  
   - Subtle glow on hover (`shadow-violet-500/30`)  
   - `Sparkles` icon (or `Plus` with animated pulse)  
   > Commit: `design(sidebar): apply gradient style to New Snippet button`
 
-- [ ] **28.3** Redesign the search bar (`app/dashboard/page.tsx`)  
+- [x] **28.3** Redesign the search bar (`app/dashboard/page.tsx`)  
   - Glass background with blur  
   - Violet focus ring  
   - Search icon subtle glow on focus  
   > Commit: `design(dashboard): redesign search bar with glass style`
 
-- [ ] **28.4** Redesign the language filter chips (`components/language-filter.tsx`)  
+- [x] **28.4** Redesign the language filter chips (`components/language-filter.tsx`)  
   - Default chip: glass background with subtle border  
   - Active chip: violet gradient background, white text  
   - Smooth `transition-all` between states  
   > Commit: `design(dashboard): redesign language filter chips with gradient active state`
 
-- [ ] **28.5** Add skeleton loading cards to replace the spinner  
+- [x] **28.5** Add skeleton loading cards to replace the spinner  
   - When SWR is loading, show 6 skeleton cards in the grid  
   - Each skeleton has an animated shimmer effect  
   - Use the existing `<Skeleton>` component from shadcn/ui  
@@ -1039,18 +1039,18 @@ This plan is split into **two phases**:
   - Smooth `transition-all duration-200`  
   > Commit: `design(card): apply glassmorphism and hover glow to snippet cards`
 
-- [ ] **29.2** Redesign the language badge  
+- [x] **29.2** Redesign the language badge  
   - Language-specific colors (JS = amber, Python = blue, Rust = orange, etc.) from `UI_REDESIGN.md`  
   - Small colored dot + language name  
   > Commit: `design(card): add language-specific colors to language badges`
 
-- [ ] **29.3** Redesign the copy button  
+- [x] **29.3** Redesign the copy button  
   - Appears on hover with a fade-in transition  
   - Glass button with violet icon  
   - On copy success: brief green flash + checkmark  
   > Commit: `design(card): redesign copy button with hover reveal and success feedback`
 
-- [ ] **29.4** Improve the card footer  
+- [x] **29.4** Improve the card footer  
   - Tags displayed as small pill badges with glass background  
   - Timestamp: smaller, muted, with a clock icon  
   - Clean visual hierarchy — language badge prominent, tags secondary  
@@ -1062,27 +1062,27 @@ This plan is split into **two phases**:
 
 **Goal:** Upgrade the right-side detail panel and create/edit dialog to match the new premium aesthetic.
 
-- [ ] **30.1** Redesign the detail panel (`components/snippet-detail-panel.tsx`)  
+- [x] **30.1** Redesign the detail panel (`components/snippet-detail-panel.tsx`)  
   - Panel background: dark glass  
   - Header: gradient text on snippet title  
   - Action buttons (Copy, Edit, Delete): glass buttons with borders  
   - Tab bar: subtle underline indicator in violet, not the default heavy box  
   > Commit: `design(panel): redesign detail panel with glass background and gradient title`
 
-- [ ] **30.2** Redesign the diff viewer (`components/diff-viewer.tsx`)  
+- [x] **30.2** Redesign the diff viewer (`components/diff-viewer.tsx`)  
   - Header stats: `+N` in green, `-N` in red — bold and prominent  
   - Diff lines: slightly more saturated colors for added/removed  
   - Code font slightly larger for readability  
   > Commit: `design(diff): improve diff viewer visual clarity`
 
-- [ ] **30.3** Redesign the version history timeline (`components/version-history.tsx`)  
+- [x] **30.3** Redesign the version history timeline (`components/version-history.tsx`)  
   - Timeline line in violet  
   - Version dot: violet fill when selected, glass when unselected  
   - Selected version: violet border + glass highlight background  
   - "Latest" badge: gradient background  
   > Commit: `design(history): redesign version history timeline with violet accents`
 
-- [ ] **30.4** Redesign the create/edit dialog (`components/snippet-dialog.tsx`)  
+- [x] **30.4** Redesign the create/edit dialog (`components/snippet-dialog.tsx`)  
   - Dark glass dialog background  
   - Form inputs: glass style with violet focus ring  
   - Tag toggle buttons: glass default, gradient active  

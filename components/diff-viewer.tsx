@@ -47,7 +47,7 @@ export function DiffViewer({ oldVersion, newVersion, language }: DiffViewerProps
         </div>
         <div className="flex items-center gap-3 text-sm">
           <span className="text-green-500 font-bold">+{stats.added} added</span>
-          <span className="text-red-500">-{stats.removed} removed</span>
+          <span className="text-red-500 font-medium">-{stats.removed} removed</span>
         </div>
       </div>
 

@@ -63,7 +63,7 @@ export function DashboardSidebar({
             <Code2 className="h-4 w-4" />
           </div>
           {!isCollapsed && (
-            <span className="font-semibold text-sidebar-foreground">SnippetVault</span>
+            <span className="font-semibold gradient-text">SnippetVault</span>
           )}
         </div>
         <Button
@@ -94,7 +94,7 @@ export function DashboardSidebar({
         <Button
           onClick={onNewSnippet}
           className={cn(
-            'w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium',
+            'w-full gradient-bg hover:opacity-90 text-white font-medium hover:shadow-lg hover:shadow-primary/30',
             isCollapsed ? 'px-0' : 'justify-start'
           )}
         >
@@ -110,7 +110,7 @@ export function DashboardSidebar({
           onClick={() => onLanguageSelect(null)}
           className={cn(
             'w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent',
-            selectedLanguage === null && 'bg-sidebar-accent',
+            selectedLanguage === null && 'bg-primary/10 border-l-2 border-primary',
             isCollapsed && 'justify-center px-0'
           )}
         >
@@ -135,7 +135,7 @@ export function DashboardSidebar({
                   onClick={() => onLanguageSelect(lang === selectedLanguage ? null : lang)}
                   className={cn(
                     'w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent font-normal',
-                    selectedLanguage === lang && 'bg-sidebar-accent'
+                    selectedLanguage === lang && 'bg-primary/10 border-l-2 border-primary'
                   )}
                 >
                   <Code2 className="h-3.5 w-3.5 mr-2 text-sidebar-muted" />

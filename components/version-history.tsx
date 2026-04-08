@@ -53,7 +53,7 @@ export function VersionHistory({
 
       <div className="relative">
         {/* Timeline line */}
-        <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
+        <div className="absolute left-4 top-0 bottom-0 w-px bg-primary/30" />
 
         <div className="space-y-4">
           {versions.map((version, index) => {
@@ -75,7 +75,7 @@ export function VersionHistory({
                   className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                     selected
                       ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary text-muted-foreground'
+                      : 'glass border border-border text-muted-foreground'
                   }`}
                 >
                   {selected ? (

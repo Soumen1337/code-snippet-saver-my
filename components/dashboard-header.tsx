@@ -34,14 +34,14 @@ export function DashboardHeader({
         </div>
 
         <div className="flex flex-1 max-w-md items-center">
-          <div className="relative w-full">
+          <div className="glass rounded-lg w-full relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search snippets..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-10 bg-input"
+              className="w-full pl-10 bg-input/50 backdrop-blur-sm border-border focus:border-primary transition-all"
             />
           </div>
         </div>

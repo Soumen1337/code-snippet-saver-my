@@ -2,19 +2,13 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Code2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -55,74 +49,69 @@ export default function SignUpPage() {
     }
   }
 
+  const inputClass = cn('bg-input/50 backdrop-blur-sm border-border focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all')
+
   return (
-    <div className="flex min-h-svh w-full items-center justify-center bg-background p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-center gap-2 text-foreground">
-            <Code2 className="h-8 w-8 text-primary" />
-            <span className="text-xl font-semibold">SnippetVault</span>
-          </div>
-          <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-2xl text-card-foreground">Sign up</CardTitle>
-              <CardDescription>Create a new account to save your snippets</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSignUp}>
-                <div className="flex flex-col gap-6">
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="developer@example.com"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-input"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-input"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="repeat-password">Confirm Password</Label>
-                    <Input
-                      id="repeat-password"
-                      type="password"
-                      required
-                      value={repeatPassword}
-                      onChange={(e) => setRepeatPassword(e.target.value)}
-                      className="bg-input"
-                    />
-                  </div>
-                  {error && <p className="text-sm text-destructive-foreground">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? 'Creating account...' : 'Sign up'}
-                  </Button>
-                </div>
-                <div className="mt-4 text-center text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <Link
-                    href="/auth/login"
-                    className="text-primary underline underline-offset-4 hover:text-primary/70"
-                  >
-                    Login
-                  </Link>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <div className="glass rounded-2xl border border-white/10 p-8 w-full max-w-md shadow-2xl">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Code2 className="h-8 w-8 text-primary" />
+          <span className="text-xl font-semibold gradient-text">SnippetVault</span>
         </div>
+        <h1 className="text-2xl font-bold text-foreground mb-1">Create account</h1>
+        <p className="text-sm text-muted-foreground mb-6">Start saving your code snippets for free</p>
+
+        <form onSubmit={handleSignUp} className="flex flex-col gap-5">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="developer@example.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="repeat-password">Confirm Password</Label>
+            <Input
+              id="repeat-password"
+              type="password"
+              required
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="gradient-bg hover:opacity-90 text-white w-full"
+          >
+            {isLoading ? 'Creating account...' : 'Sign up'}
+          </Button>
+        </form>
+
+        <p className="mt-5 text-center text-sm text-muted-foreground">
+          Already have an account?{' '}
+          <Link href="/auth/login" className="text-primary underline underline-offset-4 hover:text-primary/70">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   )

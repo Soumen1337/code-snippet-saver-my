@@ -84,13 +84,13 @@ export function SnippetDetailPanel({
   return (
     <>
       <Sheet open={!!snippet} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-card border-border">
+        <SheetContent className="w-full sm:max-w-2xl overflow-y-auto bg-card border-border backdrop-blur-xl">
           {snippet && (
             <>
               <SheetHeader className="pb-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <SheetTitle className="text-xl text-card-foreground truncate">
+                    <SheetTitle className="text-xl gradient-text truncate">
                       {snippet.title}
                     </SheetTitle>
                     {snippet.description && (
@@ -119,7 +119,7 @@ export function SnippetDetailPanel({
                 </div>
 
                 <div className="flex items-center gap-2 mt-4">
-                  <Button onClick={handleCopy} variant="outline" size="sm">
+                  <Button onClick={handleCopy} variant="outline" size="sm" className="glass border border-white/10 hover:border-primary/50">
                     {copied ? (
                       <>
                         <Check className="h-4 w-4 mr-2 text-green-500" />
@@ -132,7 +132,7 @@ export function SnippetDetailPanel({
                       </>
                     )}
                   </Button>
-                  <Button onClick={onEdit} variant="outline" size="sm">
+                  <Button onClick={onEdit} variant="outline" size="sm" className="glass border border-white/10 hover:border-primary/50">
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>
@@ -154,7 +154,7 @@ export function SnippetDetailPanel({
               </SheetHeader>
 
               <Tabs defaultValue="code" className="mt-4">
-                <TabsList className="bg-secondary">
+                <TabsList className="bg-transparent border-b border-border w-full justify-start rounded-none h-auto p-0 gap-1">
                   <TabsTrigger value="code">Code</TabsTrigger>
                   <TabsTrigger value="history">History ({versions.length})</TabsTrigger>
                   {selectedVersions[0] && selectedVersions[1] && (

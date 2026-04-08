@@ -10,7 +10,8 @@ import { SnippetDetailPanel } from '@/components/snippet-detail-panel'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { SnippetWithTags, Tag, Language } from '@/lib/types'
-import { Loader2, Search, Plus, Code2 } from 'lucide-react'
+import { Search, Plus, Code2 } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useDebounce } from '@/hooks/use-debounce'
 import { toast } from 'sonner'
 
@@ -126,15 +127,17 @@ export default function DashboardPage() {
           </div>
 
           {/* Search */}
-          <div className="relative mb-5">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search snippets..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-2xl pl-10 bg-input border-border"
-            />
+          <div className="relative mb-5 max-w-2xl">
+            <div className="glass rounded-lg">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search snippets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 bg-input/50 backdrop-blur-sm border-border focus:border-primary transition-all"
+              />
+            </div>
           </div>
 
           {/* Language Filter Chips */}
@@ -147,8 +150,18 @@ export default function DashboardPage() {
 
           {/* Snippets Grid */}
           {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="glass rounded-xl p-4 space-y-3 border border-white/10">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-32 w-full rounded-md" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                    <Skeleton className="h-5 w-12 rounded-full" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : error ? (
             <div className="text-center py-20">

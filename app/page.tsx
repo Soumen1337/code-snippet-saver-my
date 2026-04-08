@@ -26,26 +26,75 @@ export default function HomePage() {
       {/* Hero */}
       <main>
         <section className="py-24 px-6">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground">
-              <GitBranch className="h-4 w-4" />
-              <span>Version control for your code snippets</span>
-            </div>
-            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Save, organize, and track
-              <span className="gradient-text"> code snippets</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-muted-foreground">
-              Never lose track of your evolving code snippets. SnippetVault provides Git-like version history, 
-              powerful search, and smart tagging to keep your code organized.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-4">
-              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
-                <Link href="/auth/sign-up">Start saving snippets</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/auth/login">Sign in</Link>
-              </Button>
+          <div className="mx-auto max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Hero text */}
+              <div>
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground">
+                  <GitBranch className="h-4 w-4" />
+                  <span>Version control for your code snippets</span>
+                </div>
+                <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                  Save, organize, and track
+                  <span className="gradient-text"> code snippets</span>
+                </h1>
+                <p className="mt-6 max-w-xl text-pretty text-lg text-muted-foreground">
+                  Never lose track of your evolving code snippets. SnippetVault provides Git-like version history,
+                  powerful search, and smart tagging to keep your code organized.
+                </p>
+                <div className="mt-10 flex items-center gap-4">
+                  <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white">
+                    <Link href="/auth/sign-up">Start saving snippets</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" asChild>
+                    <Link href="/auth/login">Sign in</Link>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Code preview card */}
+              <div className="hidden md:block">
+                <div className="glass border-white/10 rounded-xl p-4 shadow-2xl shadow-primary/10">
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <span className="h-3 w-3 rounded-full bg-red-500/70" />
+                    <span className="h-3 w-3 rounded-full bg-yellow-500/70" />
+                    <span className="h-3 w-3 rounded-full bg-green-500/70" />
+                    <span className="ml-2 text-xs text-muted-foreground font-mono">debounce.js</span>
+                  </div>
+                  <div className="bg-[#0d1117] rounded-lg p-4 overflow-hidden">
+                    <pre className="text-sm font-mono leading-relaxed">
+                      <span className="text-violet-400">function </span>
+                      <span className="text-cyan-400">debounce</span>
+                      <span className="text-slate-300">(fn, delay) {'{'}</span>{'\n'}
+                      <span className="text-slate-300">  </span>
+                      <span className="text-violet-400">let </span>
+                      <span className="text-slate-300">timer;</span>{'\n'}
+                      <span className="text-slate-300">  </span>
+                      <span className="text-violet-400">return function </span>
+                      <span className="text-slate-300">(...args) {'{'}</span>{'\n'}
+                      <span className="text-slate-300">    </span>
+                      <span className="text-cyan-400">clearTimeout</span>
+                      <span className="text-slate-300">(timer);</span>{'\n'}
+                      <span className="text-slate-300">    timer = </span>
+                      <span className="text-cyan-400">setTimeout</span>
+                      <span className="text-slate-300">(() =&gt; {'{'}</span>{'\n'}
+                      <span className="text-slate-300">      fn.</span>
+                      <span className="text-cyan-400">apply</span>
+                      <span className="text-slate-300">(</span>
+                      <span className="text-violet-400">this</span>
+                      <span className="text-slate-300">, args);</span>{'\n'}
+                      <span className="text-slate-300">    {'}'}, delay);</span>{'\n'}
+                      <span className="text-slate-300">  {'}'};</span>{'\n'}
+                      <span className="text-slate-300">{'}'}</span>
+                    </pre>
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 flex-wrap">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">javascript</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground">utility</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full glass border border-white/10 text-muted-foreground">performance</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
