@@ -65,7 +65,13 @@ export function SettingsSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Settings">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Settings"
+          className="text-muted-foreground hover:text-foreground hover:bg-secondary"
+          title="Settings"
+        >
           <Settings className="h-4 w-4" />
         </Button>
       </SheetTrigger>

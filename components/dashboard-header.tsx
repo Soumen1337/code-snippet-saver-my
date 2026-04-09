@@ -49,11 +49,13 @@ export function DashboardHeader({
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">New Snippet</span>
           </Button>
+          <div className="w-px h-5 bg-border mx-1" />
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
+            className="text-muted-foreground hover:text-foreground"
           >
             {mounted ? (
               theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />
