@@ -134,20 +134,19 @@
     radial-gradient(ellipse 50% 35% at 92% 88%, oklch(0.72 0.15 55 / 0.07) 0%, transparent 55%);
 }
 
-/* Entrance animations */
+/* Entrance animations — hero-in avoids conflict with tw-animate-css's .animate-in */
 @keyframes fadeInUp {
   from { opacity: 0; translate: 0 24px; }
   to { opacity: 1; translate: 0 0; }
 }
 
-.animate-in {
+.hero-in {
   animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+.hero-d-1 { animation-delay: 100ms; }
+.hero-d-2 { animation-delay: 200ms; }
+.hero-d-3 { animation-delay: 300ms; }
+.hero-d-4 { animation-delay: 400ms; }
 
 /* Scroll-driven fade-in (Chrome/Firefox; Safari shows elements statically) */
 @supports (animation-timeline: view()) {

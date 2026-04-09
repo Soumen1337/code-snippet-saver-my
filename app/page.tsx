@@ -15,18 +15,18 @@ export default function HomePage() {
             <div className="grid md:grid-cols-2 gap-16 items-center">
               {/* Hero text */}
               <div>
-                <div className="animate-in delay-100 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-8 font-medium">
+                <div className="hero-in hero-d-1 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-8 font-medium">
                   <Code2 className="h-3.5 w-3.5" />
                   Personal code vault for developers
                 </div>
-                <h1 className="animate-in delay-200 text-5xl font-black tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-[1.05]">
+                <h1 className="hero-in hero-d-2 text-5xl font-black tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-[1.05]">
                   Your code.<br />Your vault.<br />
                   <span className="text-primary">Organized.</span>
                 </h1>
-                <p className="animate-in delay-300 mt-7 max-w-xl text-lg text-muted-foreground leading-relaxed">
+                <p className="hero-in hero-d-3 mt-7 max-w-xl text-lg text-muted-foreground leading-relaxed">
                   Save snippets in 20+ languages, tag them, search instantly, and track every edit with built-in version history.
                 </p>
-                <div className="animate-in delay-400 mt-10 flex items-center gap-4">
+                <div className="hero-in hero-d-4 mt-10 flex items-center gap-4">
                   <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white rounded-lg px-6">
                     <Link href="/auth/sign-up">Get started for free →</Link>
                   </Button>
@@ -37,7 +37,7 @@ export default function HomePage() {
               </div>
 
               {/* Code preview card */}
-              <div className="hidden md:block animate-in delay-300">
+              <div className="hidden md:block hero-in hero-d-3">
                 <div className="bg-[#0d1117] rounded-2xl border border-white/8 p-5 shadow-2xl shadow-black/40">
                   <div className="flex items-center gap-1.5 mb-4">
                     <span className="h-3 w-3 rounded-full bg-red-500/70" />

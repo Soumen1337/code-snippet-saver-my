@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Code2, Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -7,6 +8,9 @@ import Link from 'next/link'
 
 export function LandingHeader() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   return (
     <header className="border-b border-border">
@@ -20,8 +24,17 @@ export function LandingHeader() {
           <a href="#features" className="hover:text-foreground transition-colors">Features</a>
         </nav>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} suppressHydrationWarning>
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label="Toggle theme"
+          >
+            {mounted ? (
+              theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />
+            ) : (
+              <div className="h-4 w-4" />
+            )}
           </Button>
           <Button variant="ghost" asChild>
             <Link href="/auth/login">Login</Link>
