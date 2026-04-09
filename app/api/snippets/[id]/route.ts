@@ -137,7 +137,8 @@ export async function PUT(
     .select('tags(id, name)')
     .eq('snippet_id', id)
 
-  const tags = (snippetTags ?? []).map((st: { tags: { id: string; name: string } | null }) => st.tags).filter(Boolean)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tags = (snippetTags ?? []).map((st: any) => st.tags).filter(Boolean)
 
   return NextResponse.json({ snippet: { ...snippet, tags } })
 }

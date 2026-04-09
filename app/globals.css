@@ -148,17 +148,8 @@
 .hero-d-3 { animation-delay: 300ms; }
 .hero-d-4 { animation-delay: 400ms; }
 
-/* Scroll-driven fade-in (Chrome/Firefox; Safari shows elements statically) */
-@supports (animation-timeline: view()) {
-  .scroll-reveal {
-    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-timeline: view();
-    animation-range: entry 5% entry 30%;
-  }
-  .scroll-reveal-delay-1 { animation-delay: 80ms; }
-  .scroll-reveal-delay-2 { animation-delay: 160ms; }
-  .scroll-reveal-delay-3 { animation-delay: 240ms; }
-}
+/* Scroll animations are now handled by JS Intersection Observer
+   via components/scroll-reveal.tsx — works in all browsers */
 
 /* Glassmorphism & gradient utilities */
 .glass {

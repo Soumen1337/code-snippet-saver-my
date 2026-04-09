@@ -1,8 +1,93 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Code2, History, Search, Tag, Copy, UserCog, GitCommit, MonitorSmartphone, Layers } from 'lucide-react'
 import Link from 'next/link'
 import { LandingHeader } from '@/components/landing-header'
+import { ScrollReveal, StaggeredCards } from '@/components/scroll-reveal'
 
+/* ------------------------------------------------------------------ */
+/* Feature card data                                                   */
+/* ------------------------------------------------------------------ */
+const features = [
+  {
+    icon: Code2,
+    title: '20+ Languages',
+    desc: 'Syntax highlighting for JavaScript, TypeScript, Python, Rust, Go, SQL and more. Every snippet looks sharp with color-coded language badges.',
+  },
+  {
+    icon: History,
+    title: 'Version History',
+    desc: 'Every save is versioned automatically. Compare any version to the previous one side by side. Green lines added, red lines removed.',
+  },
+  {
+    icon: GitCommit,
+    title: 'Commit Messages',
+    desc: 'Add a short note when you save a snippet, like a git commit. Write "fixed edge case" or "refactored for clarity" so future you knows exactly what changed.',
+  },
+  {
+    icon: Search,
+    title: 'Instant Search',
+    desc: 'Search by title, language, or tags. Results update as you type, debounced and fast, with no full-page reloads.',
+  },
+  {
+    icon: Tag,
+    title: 'Tags and Filtering',
+    desc: 'Create custom tags and click any tag in the sidebar to filter your vault instantly.',
+    hasTagDemo: true,
+  },
+  {
+    icon: Copy,
+    title: 'One-click Copy',
+    desc: 'Hover any snippet card and copy the full code to your clipboard instantly. No selecting, no scrolling, no friction.',
+  },
+  {
+    icon: MonitorSmartphone,
+    title: 'Cross-device Sync',
+    desc: 'Your entire vault is stored securely in Supabase. Sign in on your laptop, desktop, or any browser and all your snippets are right there.',
+  },
+  {
+    icon: Layers,
+    title: 'Descriptions and Context',
+    desc: 'Every snippet supports a plain-text description. Write what the snippet does, when to use it, or what problem it solves, so the context never gets lost.',
+  },
+  {
+    icon: UserCog,
+    title: 'Profile and Settings',
+    desc: 'Set a display name, switch between light and dark mode, and manage your account from the settings panel inside your vault.',
+  },
+]
+
+/* ------------------------------------------------------------------ */
+/* Feature card component                                              */
+/* ------------------------------------------------------------------ */
+function FeatureCard({ icon: Icon, title, desc, hasTagDemo }: (typeof features)[number]) {
+  return (
+    <div className="group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-1">
+      <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 group-hover:scale-110 transition-all duration-300">
+        <Icon className="h-[1.1rem] w-[1.1rem]" />
+      </div>
+      <h3 className="font-bold text-foreground">{title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">
+        {hasTagDemo ? (
+          <>
+            Create custom tags like{' '}
+            <span className="font-mono text-xs bg-secondary px-1.5 py-0.5 rounded border border-border">react</span>
+            {' '}or{' '}
+            <span className="font-mono text-xs bg-secondary px-1.5 py-0.5 rounded border border-border">interview-prep</span>
+            . Click any tag in the sidebar to filter your vault instantly.
+          </>
+        ) : (
+          desc
+        )}
+      </p>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* Page                                                                */
+/* ------------------------------------------------------------------ */
 export default function HomePage() {
   return (
     <div className="min-h-svh bg-background">
@@ -105,38 +190,51 @@ export default function HomePage() {
         </section>
 
         {/* Tech stack bar */}
-        <div className="border-y border-border py-5 px-6">
-          <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-xs text-muted-foreground/60 font-mono">
-            <span>Built with</span>
-            <span className="text-muted-foreground/80">Next.js 16</span>
-            <span className="hidden sm:block w-px h-3 bg-border" />
-            <span className="text-muted-foreground/80">Supabase</span>
-            <span className="hidden sm:block w-px h-3 bg-border" />
-            <span className="text-muted-foreground/80">TypeScript</span>
-            <span className="hidden sm:block w-px h-3 bg-border" />
-            <span className="text-muted-foreground/80">Vercel</span>
-            <span className="hidden sm:block w-px h-3 bg-border" />
-            <span className="text-muted-foreground/80">Tailwind CSS v4</span>
-            <span className="hidden sm:block w-px h-3 bg-border" />
-            <span className="text-primary/70">Free and open</span>
+        <ScrollReveal direction="none" duration={800}>
+          <div className="border-y border-border py-5 px-6">
+            <div className="mx-auto max-w-6xl flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-xs text-muted-foreground/60 font-mono">
+              <span>Built with</span>
+              <span className="text-muted-foreground/80">Next.js 16</span>
+              <span className="hidden sm:block w-px h-3 bg-border" />
+              <span className="text-muted-foreground/80">Supabase</span>
+              <span className="hidden sm:block w-px h-3 bg-border" />
+              <span className="text-muted-foreground/80">TypeScript</span>
+              <span className="hidden sm:block w-px h-3 bg-border" />
+              <span className="text-muted-foreground/80">Vercel</span>
+              <span className="hidden sm:block w-px h-3 bg-border" />
+              <span className="text-muted-foreground/80">Tailwind CSS v4</span>
+              <span className="hidden sm:block w-px h-3 bg-border" />
+              <span className="text-primary/70">Free and open</span>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* How it works */}
         <section id="how-it-works" className="py-24 px-6">
           <div className="mx-auto max-w-6xl">
-            <div className="scroll-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
-              Simple workflow
-            </div>
-            <h2 className="scroll-reveal text-4xl font-black text-foreground mb-3 tracking-tight">
-              How it works
-            </h2>
-            <p className="scroll-reveal text-muted-foreground mb-16 max-w-lg text-lg">
-              Three steps from raw snippet to a searchable, versioned library.
-            </p>
+            <ScrollReveal direction="up" delay={0}>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
+                Simple workflow
+              </div>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={80}>
+              <h2 className="text-4xl font-black text-foreground mb-3 tracking-tight">
+                How it works
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={160}>
+              <p className="text-muted-foreground mb-16 max-w-lg text-lg">
+                Three steps from raw snippet to a searchable, versioned library.
+              </p>
+            </ScrollReveal>
 
-            <div className="grid md:grid-cols-3 gap-0">
-              <div className="scroll-reveal scroll-reveal-delay-1 flex gap-5 md:pr-10 pb-10 md:pb-0 border-b md:border-b-0 md:border-r border-border">
+            <StaggeredCards
+              className="grid md:grid-cols-3 gap-0"
+              staggerDelay={200}
+              direction="up"
+              duration={700}
+            >
+              <div className="flex gap-5 md:pr-10 pb-10 md:pb-0 border-b md:border-b-0 md:border-r border-border">
                 <div className="text-4xl font-black text-primary/25 font-mono leading-none shrink-0 w-10">01</div>
                 <div>
                   <h3 className="text-lg font-bold text-foreground mb-2">Save</h3>
@@ -146,7 +244,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="scroll-reveal scroll-reveal-delay-2 flex gap-5 md:px-10 pt-10 md:pt-0 pb-10 md:pb-0 border-b md:border-b-0 md:border-r border-border">
+              <div className="flex gap-5 md:px-10 pt-10 md:pt-0 pb-10 md:pb-0 border-b md:border-b-0 md:border-r border-border">
                 <div className="text-4xl font-black text-primary/25 font-mono leading-none shrink-0 w-10">02</div>
                 <div>
                   <h3 className="text-lg font-bold text-foreground mb-2">Organize</h3>
@@ -156,7 +254,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="scroll-reveal scroll-reveal-delay-3 flex gap-5 md:pl-10 pt-10 md:pt-0">
+              <div className="flex gap-5 md:pl-10 pt-10 md:pt-0">
                 <div className="text-4xl font-black text-primary/25 font-mono leading-none shrink-0 w-10">03</div>
                 <div>
                   <h3 className="text-lg font-bold text-foreground mb-2">Track changes</h3>
@@ -165,137 +263,63 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </StaggeredCards>
           </div>
         </section>
 
-        {/* Features */}
+        {/* Features — Everything you need */}
         <section id="features" className="border-t border-border py-24 px-6">
           <div className="mx-auto max-w-6xl">
-            <div className="scroll-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
-              Built for developers
-            </div>
-            <h2 className="scroll-reveal text-4xl font-black text-foreground mb-3 tracking-tight">
-              Everything you need
-            </h2>
-            <p className="scroll-reveal text-muted-foreground mb-16 max-w-lg text-lg">
-              A personal library of reusable code that works the way developers think.
-            </p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-
-              <div className="scroll-reveal scroll-reveal-delay-1 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <Code2 className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">20+ Languages</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Syntax highlighting for JavaScript, TypeScript, Python, Rust, Go, SQL and more. Every snippet looks sharp with color-coded language badges.
-                </p>
+            <ScrollReveal direction="up" delay={0}>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/15 border border-primary/25 text-sm text-primary mb-6 font-medium">
+                Built for developers
               </div>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={80}>
+              <h2 className="text-4xl font-black text-foreground mb-3 tracking-tight">
+                Everything you need
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={160}>
+              <p className="text-muted-foreground mb-16 max-w-lg text-lg">
+                A personal library of reusable code that works the way developers think.
+              </p>
+            </ScrollReveal>
 
-              <div className="scroll-reveal scroll-reveal-delay-2 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <History className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Version History</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Every save is versioned automatically. Compare any version to the previous one side by side. Green lines added, red lines removed.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-3 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <GitCommit className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Commit Messages</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Add a short note when you save a snippet, like a git commit. Write "fixed edge case" or "refactored for clarity" so future you knows exactly what changed.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-1 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <Search className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Instant Search</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Search by title, language, or tags. Results update as you type, debounced and fast, with no full-page reloads.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-2 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <Tag className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Tags and Filtering</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Create custom tags like{' '}
-                  <span className="font-mono text-xs bg-secondary px-1.5 py-0.5 rounded border border-border">react</span>
-                  {' '}or{' '}
-                  <span className="font-mono text-xs bg-secondary px-1.5 py-0.5 rounded border border-border">interview-prep</span>
-                  . Click any tag in the sidebar to filter your vault instantly.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-3 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <Copy className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">One-click Copy</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Hover any snippet card and copy the full code to your clipboard instantly. No selecting, no scrolling, no friction.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-1 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <MonitorSmartphone className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Cross-device Sync</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Your entire vault is stored securely in Supabase. Sign in on your laptop, desktop, or any browser and all your snippets are right there.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-2 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <Layers className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Descriptions and Context</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Every snippet supports a plain-text description. Write what the snippet does, when to use it, or what problem it solves, so the context never gets lost.
-                </p>
-              </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-3 group bg-card border border-border rounded-xl p-6 space-y-3 hover:border-primary/40 transition-colors duration-200">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-                  <UserCog className="h-[1.1rem] w-[1.1rem]" />
-                </div>
-                <h3 className="font-bold text-foreground">Profile and Settings</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Set a display name, switch between light and dark mode, and manage your account from the settings panel inside your vault.
-                </p>
-              </div>
-
-            </div>
+            {/* Staggered feature cards */}
+            <StaggeredCards
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
+              staggerDelay={100}
+              direction="up"
+              duration={650}
+            >
+              {features.map((feat) => (
+                <FeatureCard key={feat.title} {...feat} />
+              ))}
+            </StaggeredCards>
           </div>
         </section>
 
         {/* CTA */}
         <section className="border-t border-border py-28 px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="scroll-reveal text-5xl font-black text-foreground tracking-tight leading-[1.1]">
-              Stop losing<br />good snippets.
-            </h2>
-            <p className="scroll-reveal mt-5 text-lg text-muted-foreground">
-              Free forever. No credit card. No limits on snippets.
-            </p>
-            <div className="scroll-reveal mt-10">
-              <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white rounded-lg px-10 font-semibold text-base">
-                <Link href="/auth/sign-up">Create your vault for free</Link>
-              </Button>
-            </div>
+            <ScrollReveal direction="scale" duration={800}>
+              <h2 className="text-5xl font-black text-foreground tracking-tight leading-[1.1]">
+                Stop losing<br />good snippets.
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="mt-5 text-lg text-muted-foreground">
+                Free forever. No credit card. No limits on snippets.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={350}>
+              <div className="mt-10">
+                <Button size="lg" asChild className="gradient-bg hover:opacity-90 text-white rounded-lg px-10 font-semibold text-base">
+                  <Link href="/auth/sign-up">Create your vault for free</Link>
+                </Button>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
       </main>
