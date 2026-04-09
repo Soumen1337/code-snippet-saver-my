@@ -1,11 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Code2, Plus, LogOut, Search, Sun, Moon } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { Code2, Plus, Search, Sun, Moon } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { SettingsSheet } from '@/components/settings-sheet'
 
 interface DashboardHeaderProps {
   searchQuery: string
@@ -18,19 +18,15 @@ export function DashboardHeader({
   onSearchChange,
   onNewSnippet,
 }: DashboardHeaderProps) {
-  const router = useRouter()
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/')
-  }
+  useEffect(() => setMounted(true), [])
 
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Code2 className="h-7 w-7 text-primary" />
           <span className="text-lg font-semibold text-foreground hidden sm:inline">SnippetVault</span>
         </div>
@@ -48,20 +44,24 @@ export function DashboardHeader({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={onNewSnippet}
-            className="gradient-bg hover:opacity-90 text-white"
-          >
+        <div className="flex items-center gap-1.5 shrink-0">
+          <Button onClick={onNewSnippet} className="gradient-bg hover:opacity-90 text-white">
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">New Snippet</span>
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} suppressHydrationWarning>
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label="Toggle theme"
+          >
+            {mounted ? (
+              theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />
+            ) : (
+              <div className="h-4 w-4" />
+            )}
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
-          </Button>
+          <SettingsSheet />
         </div>
       </div>
     </header>
