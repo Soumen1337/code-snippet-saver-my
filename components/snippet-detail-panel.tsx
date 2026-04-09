@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useSWR from 'swr'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -46,6 +46,23 @@ export function SnippetDetailPanel({
   const [copied, setCopied] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [selectedVersions, setSelectedVersions] = useState<[SnippetVersion | null, SnippetVersion | null]>([null, null])
+  const [activeTab, setActiveTab] = useState('code')
+
+  // Reset all state when a different snippet is opened
+  useEffect(() => {
+    setSelectedVersions([null, null])
+    setActiveTab('code')
+  }, [snippet?.id])
+
+  // Auto-navigate to diff tab when 2 versions are selected
+  useEffect(() => {
+    if (selectedVersions[0] && selectedVersions[1]) {
+      setActiveTab('diff')
+    } else if (activeTab === 'diff') {
+      setActiveTab('history')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVersions[0]?.id, selectedVersions[1]?.id])
 
   const { data: versionsData } = useSWR<{ versions: SnippetVersion[] }>(
     snippet ? `/api/snippets/${snippet.id}/versions` : null,
@@ -72,6 +89,7 @@ export function SnippetDetailPanel({
     setSelectedVersions(prev => {
       if (!prev[0]) return [version, null]
       if (prev[0].id === version.id) return [null, null]
+      if (prev[1]?.id === version.id) return [prev[0], null]
       if (!prev[1]) return [prev[0], version]
       return [version, null]
     })
@@ -153,7 +171,7 @@ export function SnippetDetailPanel({
                 </div>
               </SheetHeader>
 
-              <Tabs defaultValue="code" className="mt-4">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
                 <TabsList className="bg-transparent border-b border-border w-full justify-start rounded-none h-auto p-0 gap-1">
                   <TabsTrigger value="code">Code</TabsTrigger>
                   <TabsTrigger value="history">History ({versions.length})</TabsTrigger>

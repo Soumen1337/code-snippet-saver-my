@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Settings, LogOut, User, Palette, Trash2, Sun, Moon } from 'lucide-react'
+import { Settings, LogOut, Sun, Moon } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -12,13 +12,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { useTheme } from 'next-themes'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-export function SettingsSheet() {
+interface SettingsSheetProps {
+  trigger?: React.ReactNode
+}
+
+export function SettingsSheet({ trigger }: SettingsSheetProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [userEmail, setUserEmail] = useState('')
@@ -62,47 +65,48 @@ export function SettingsSheet() {
 
   const initials = (displayName || userEmail).slice(0, 2).toUpperCase()
 
+  const defaultTrigger = (
+    <Button
+      variant="ghost"
+      size="icon"
+      aria-label="Settings"
+      className="h-8 w-8 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent"
+    >
+      <Settings className="h-4 w-4" />
+    </Button>
+  )
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Settings"
-          className="text-muted-foreground hover:text-foreground hover:bg-secondary"
-          title="Settings"
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
+        {trigger ?? defaultTrigger}
       </SheetTrigger>
 
-      <SheetContent className="w-full sm:max-w-md bg-card border-border overflow-y-auto">
-        <SheetHeader className="mb-6">
-          <SheetTitle className="text-foreground text-lg font-bold">Settings</SheetTitle>
+      <SheetContent className="w-full sm:max-w-sm bg-card border-border flex flex-col p-0">
+        {/* Header */}
+        <SheetHeader className="px-6 pt-6 pb-5 border-b border-border">
+          <SheetTitle className="text-base font-semibold text-foreground">Settings</SheetTitle>
         </SheetHeader>
 
-        <div className="space-y-6">
-          {/* ── Profile ───────────────────────────────── */}
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-semibold text-foreground uppercase tracking-wide">Profile</span>
-            </div>
-
-            <div className="flex items-center gap-3 mb-5 p-3 rounded-xl bg-secondary/50 border border-border">
-              <div className="h-11 w-11 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                {initials || '??'}
+        <div className="flex-1 overflow-y-auto">
+          {/* ── Profile ─────────────────────────────── */}
+          <div className="px-6 py-5">
+            {/* Avatar + identity */}
+            <div className="flex items-center gap-4 mb-5">
+              <div className="h-14 w-14 rounded-2xl gradient-bg flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-lg shadow-primary/20">
+                {initials || '?'}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">
-                  {displayName || 'No display name set'}
+                <p className="text-sm font-semibold text-foreground truncate leading-snug">
+                  {displayName || 'No name set'}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
+                <p className="text-xs text-muted-foreground truncate mt-0.5">{userEmail}</p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="display-name" className="text-sm text-foreground">
+            {/* Display name field */}
+            <div className="space-y-1.5">
+              <Label htmlFor="display-name" className="text-xs text-muted-foreground font-medium">
                 Display name
               </Label>
               <div className="flex gap-2">
@@ -112,110 +116,71 @@ export function SettingsSheet() {
                   onChange={(e) => setDisplayName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                   placeholder="Your name"
-                  className="border-border focus:border-primary"
+                  className="h-9 text-sm border-border bg-input/50 focus:border-primary focus:ring-0"
                 />
                 <Button
                   onClick={handleSave}
                   disabled={saving || !displayName.trim()}
-                  className="gradient-bg hover:opacity-90 text-white shrink-0"
+                  className="h-9 px-4 gradient-bg hover:opacity-90 text-white shrink-0 text-sm font-medium"
                 >
                   {saving ? 'Saving…' : 'Save'}
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Shown in your vault header. Email cannot be changed here.
-              </p>
             </div>
-          </section>
+          </div>
 
-          <Separator className="bg-border" />
+          <div className="mx-6 h-px bg-border" />
 
-          {/* ── Appearance ────────────────────────────── */}
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <Palette className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-semibold text-foreground uppercase tracking-wide">Appearance</span>
-            </div>
-
+          {/* ── Appearance ──────────────────────────── */}
+          <div className="px-6 py-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-foreground">Theme</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Light or dark mode</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Choose your preferred look</p>
               </div>
               {mounted && (
-                <div className="flex items-center gap-1 bg-secondary rounded-lg p-1 border border-border">
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                <div className="flex items-center gap-0.5 bg-secondary rounded-lg p-1 border border-border">
+                  <button
                     onClick={() => setTheme('light')}
-                    className={`h-8 px-3 rounded-md text-xs gap-1.5 transition-all ${
+                    className={[
+                      'flex items-center gap-1.5 px-3 h-7 rounded-md text-xs font-medium transition-all',
                       theme === 'light'
                         ? 'bg-background shadow-sm text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
                   >
-                    <Sun className="h-3.5 w-3.5" />
+                    <Sun className="h-3 w-3" />
                     Light
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  </button>
+                  <button
                     onClick={() => setTheme('dark')}
-                    className={`h-8 px-3 rounded-md text-xs gap-1.5 transition-all ${
+                    className={[
+                      'flex items-center gap-1.5 px-3 h-7 rounded-md text-xs font-medium transition-all',
                       theme === 'dark'
                         ? 'bg-background shadow-sm text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
                   >
-                    <Moon className="h-3.5 w-3.5" />
+                    <Moon className="h-3 w-3" />
                     Dark
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
-          </section>
+          </div>
 
-          <Separator className="bg-border" />
+          <div className="mx-6 h-px bg-border" />
 
-          {/* ── Account ───────────────────────────────── */}
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <LogOut className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-semibold text-foreground uppercase tracking-wide">Account</span>
-            </div>
-            <Button
-              variant="outline"
+          {/* ── Sign out ────────────────────────────── */}
+          <div className="px-6 py-5">
+            <button
               onClick={handleSignOut}
-              className="w-full border-border text-foreground hover:bg-secondary justify-start gap-2"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors group"
             >
-              <LogOut className="h-4 w-4" />
-              Sign out of SnippetVault
-            </Button>
-          </section>
-
-          <Separator className="bg-border" />
-
-          {/* ── Danger zone ───────────────────────────── */}
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <Trash2 className="h-4 w-4 text-destructive" />
-              <span className="text-sm font-semibold text-destructive uppercase tracking-wide">Danger zone</span>
-            </div>
-            <Button
-              variant="outline"
-              disabled
-              className="w-full border-destructive/25 text-destructive/40 justify-start gap-2 cursor-not-allowed"
-            >
-              <Trash2 className="h-4 w-4" />
-              Delete account
-              <span className="ml-auto text-xs bg-secondary px-2 py-0.5 rounded text-muted-foreground font-normal">
-                Coming soon
-              </span>
-            </Button>
-            <p className="text-xs text-muted-foreground mt-2">
-              Permanently deletes your account and all snippets.
-            </p>
-          </section>
+              <LogOut className="h-4 w-4 shrink-0 group-hover:text-primary transition-colors" />
+              Sign out
+            </button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

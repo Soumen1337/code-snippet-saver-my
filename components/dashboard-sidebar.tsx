@@ -1,20 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/theme-toggle'
-import { 
-  Code2, 
-  Plus, 
-  LayoutGrid, 
+import {
+  Code2,
+  Plus,
+  LayoutGrid,
   ChevronLeft,
   ChevronRight,
-  LogOut
 } from 'lucide-react'
 import { Language, SUPPORTED_LANGUAGES } from '@/lib/types'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { SettingsSheet } from '@/components/settings-sheet'
+import { createClient } from '@/lib/supabase/client'
 
 interface DashboardSidebarProps {
   selectedLanguage: Language | null
@@ -41,13 +39,23 @@ export function DashboardSidebar({
   onNewSnippet,
 }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const router = useRouter()
+  const [displayName, setDisplayName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
 
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/')
-  }
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setUserEmail(user.email ?? '')
+        setDisplayName(user.user_metadata?.display_name ?? '')
+      }
+    }
+    fetchUser()
+  }, [])
+
+  const initials = (displayName || userEmail).slice(0, 2).toUpperCase()
+  const label = displayName || userEmail.split('@')[0] || 'Account'
 
   return (
     <aside
@@ -147,21 +155,42 @@ export function DashboardSidebar({
         </div>
       )}
 
-      {/* Footer */}
-      <div className={cn(
-        'mt-auto border-t border-sidebar-border p-3 flex items-center',
-        isCollapsed ? 'justify-center' : 'justify-between'
-      )}>
-        {!isCollapsed && <ThemeToggle />}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleSignOut}
-          className="h-9 w-9 text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent"
-        >
-          <LogOut className="h-4 w-4" />
-        </Button>
-        {isCollapsed && <ThemeToggle />}
+      {/* Footer — profile card */}
+      <div className="mt-auto border-t border-sidebar-border p-3">
+        {isCollapsed ? (
+          /* Collapsed: just the avatar as the settings trigger */
+          <SettingsSheet
+            trigger={
+              <button
+                className="w-full flex justify-center"
+                aria-label="Settings"
+                title={label}
+              >
+                <div className="h-8 w-8 rounded-lg gradient-bg flex items-center justify-center text-white text-xs font-bold shrink-0">
+                  {initials || '?'}
+                </div>
+              </button>
+            }
+          />
+        ) : (
+          /* Expanded: avatar + name/email + gear icon */
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg gradient-bg flex items-center justify-center text-white text-xs font-bold shrink-0">
+              {initials || '?'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-sidebar-foreground truncate leading-tight">
+                {label}
+              </p>
+              {displayName && (
+                <p className="text-[10px] text-sidebar-muted truncate leading-tight mt-0.5">
+                  {userEmail}
+                </p>
+              )}
+            </div>
+            <SettingsSheet />
+          </div>
+        )}
       </div>
     </aside>
   )
