@@ -5,8 +5,20 @@ export interface Snippet {
   description: string | null
   language: string
   current_content: string
+  is_pinned: boolean
+  is_public: boolean
+  share_slug: string | null
+  collection_id: string | null
   created_at: string
   updated_at: string
+}
+
+export interface Collection {
+  id: string
+  user_id: string
+  name: string
+  color: string
+  created_at: string
 }
 
 export interface SnippetVersion {
@@ -31,6 +43,7 @@ export interface SnippetTag {
 
 export interface SnippetWithTags extends Snippet {
   tags: Tag[]
+  collection: Collection | null
 }
 
 export type Language = 

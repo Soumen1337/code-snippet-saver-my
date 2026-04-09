@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { CodeEditor } from './code-editor'
-import { SnippetWithTags, Language, SUPPORTED_LANGUAGES, Tag } from '@/lib/types'
+import { SnippetWithTags, Language, SUPPORTED_LANGUAGES, Tag, Collection } from '@/lib/types'
 import { Loader2 } from 'lucide-react'
 
 interface SnippetDialogProps {
@@ -34,8 +34,10 @@ interface SnippetDialogProps {
     content: string
     commitMessage: string
     tagIds: string[]
+    collectionId: string | null
   }) => Promise<void>
   availableTags: Tag[]
+  availableCollections?: Collection[]
 }
 
 export function SnippetDialog({
@@ -44,6 +46,7 @@ export function SnippetDialog({
   snippet,
   onSave,
   availableTags,
+  availableCollections = [],
 }: SnippetDialogProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -52,6 +55,7 @@ export function SnippetDialog({
   const [commitMessage, setCommitMessage] = useState('')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [collectionId, setCollectionId] = useState<string | null>(null)
 
   const isEditing = !!snippet
 
@@ -62,6 +66,7 @@ export function SnippetDialog({
       setLanguage(snippet.language as Language)
       setContent(snippet.current_content)
       setSelectedTagIds(snippet.tags.map(t => t.id))
+      setCollectionId(snippet.collection_id ?? null)
       setCommitMessage('')
     } else {
       setTitle('')
@@ -70,6 +75,7 @@ export function SnippetDialog({
       setContent('')
       setCommitMessage('')
       setSelectedTagIds([])
+      setCollectionId(null)
     }
   }, [snippet, open])
 
@@ -86,6 +92,7 @@ export function SnippetDialog({
         content,
         commitMessage: commitMessage.trim() || (isEditing ? 'Updated snippet' : 'Initial version'),
         tagIds: selectedTagIds,
+        collectionId,
       })
       onOpenChange(false)
     } finally {
@@ -178,6 +185,30 @@ export function SnippetDialog({
                     className={selectedTagIds.includes(tag.id) ? 'gradient-bg text-white border-transparent hover:opacity-90' : 'bg-secondary border-border hover:border-primary/50'}
                   >
                     {tag.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {availableCollections.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <Label>Collection</Label>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" variant="outline" size="sm"
+                  onClick={() => setCollectionId(null)}
+                  className={collectionId === null ? 'gradient-bg text-white border-transparent hover:opacity-90' : 'bg-secondary border-border hover:border-primary/50'}
+                >
+                  None
+                </Button>
+                {availableCollections.map((col) => (
+                  <Button key={col.id} type="button" variant="outline" size="sm"
+                    onClick={() => setCollectionId(col.id)}
+                    className={['border transition-colors', collectionId === col.id ? 'text-white border-transparent' : 'bg-secondary border-border hover:border-primary/50'].join(' ')}
+                    style={collectionId === col.id ? { backgroundColor: col.color } : {}}
+                  >
+                    <span className="inline-block h-2 w-2 rounded-full mr-1.5" style={{ backgroundColor: col.color }} />
+                    {col.name}
                   </Button>
                 ))}
               </div>

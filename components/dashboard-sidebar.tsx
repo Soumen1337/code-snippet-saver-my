@@ -9,7 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
-import { Language, SUPPORTED_LANGUAGES } from '@/lib/types'
+import { Language, SUPPORTED_LANGUAGES, Collection } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { SettingsSheet } from '@/components/settings-sheet'
 import { createClient } from '@/lib/supabase/client'
@@ -18,6 +18,9 @@ interface DashboardSidebarProps {
   selectedLanguage: Language | null
   onLanguageSelect: (language: Language | null) => void
   onNewSnippet: () => void
+  collections?: Collection[]
+  selectedCollectionId?: string | null
+  onCollectionSelect?: (id: string | null) => void
 }
 
 const SIDEBAR_LANGUAGES: Language[] = [
@@ -37,6 +40,9 @@ export function DashboardSidebar({
   selectedLanguage,
   onLanguageSelect,
   onNewSnippet,
+  collections = [],
+  selectedCollectionId = null,
+  onCollectionSelect,
 }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [displayName, setDisplayName] = useState('')
@@ -152,6 +158,27 @@ export function DashboardSidebar({
               )
             })}
           </div>
+
+          {collections.length > 0 && (
+            <div className="mt-4">
+              <div className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
+                Collections
+              </div>
+              <div className="space-y-1">
+                {collections.map((col) => (
+                  <Button key={col.id} variant="ghost"
+                    onClick={() => onCollectionSelect?.(col.id === selectedCollectionId ? null : col.id)}
+                    className={cn('w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent font-normal',
+                      selectedCollectionId === col.id && 'bg-primary/10 border-l-2 border-primary'
+                    )}
+                  >
+                    <span className="h-2.5 w-2.5 rounded-full mr-2 shrink-0" style={{ backgroundColor: col.color }} />
+                    <span className="truncate">{col.name}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

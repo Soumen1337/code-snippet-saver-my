@@ -9,7 +9,13 @@ const snippetSchema = z.object({
   description: z.string().optional(),
   commitMessage: z.string().optional(),
   tagIds: z.array(z.string().uuid()).optional().default([]),
+  collectionId: z.string().uuid().nullable().optional(),
 })
+
+const patchSchema = z.object({
+  is_pinned: z.boolean().optional(),
+  is_public: z.boolean().optional(),
+}).refine(data => Object.keys(data).length > 0, { message: 'No fields to update' })
 
 export async function GET(
   request: NextRequest,
@@ -70,7 +76,7 @@ export async function PUT(
       { status: 400 }
     )
   }
-  const { title, description, language, content, commitMessage, tagIds } = parsed.data
+  const { title, description, language, content, commitMessage, tagIds, collectionId } = parsed.data
 
   // Get existing snippet
   const { data: existing } = await supabase
@@ -92,6 +98,7 @@ export async function PUT(
       description: description || null,
       language,
       current_content: content,
+      ...(collectionId !== undefined && { collection_id: collectionId }),
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
@@ -166,4 +173,43 @@ export async function DELETE(
   }
 
   return NextResponse.json({ success: true })
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const body = await request.json()
+  const parsed = patchSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.errors[0]?.message }, { status: 400 })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updates: Record<string, any> = { ...parsed.data }
+
+  // Generate share_slug when enabling public sharing for the first time
+  if (parsed.data.is_public) {
+    const { data: existing } = await supabase
+      .from('snippets').select('share_slug').eq('id', id).eq('user_id', user.id).single()
+    if (!existing?.share_slug) {
+      updates.share_slug = crypto.randomUUID().replace(/-/g, '').slice(0, 12)
+    }
+  }
+
+  const { data: snippet, error } = await supabase
+    .from('snippets')
+    .update(updates)
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .select()
+    .single()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ snippet })
 }

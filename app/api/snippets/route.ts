@@ -9,6 +9,7 @@ const snippetSchema = z.object({
   description: z.string().optional(),
   commitMessage: z.string().optional(),
   tagIds: z.array(z.string().uuid()).optional().default([]),
+  collectionId: z.string().uuid().nullable().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -27,8 +28,9 @@ export async function GET(request: NextRequest) {
   // Single JOIN query — snippets + tags in one round trip
   let query = supabase
     .from('snippets')
-    .select('*, snippet_tags(tags(id, name))')
+    .select('*, snippet_tags(tags(id, name)), collections(id, name, color, user_id, created_at)')
     .eq('user_id', user.id)
+    .order('is_pinned', { ascending: false })
     .order('updated_at', { ascending: false })
 
   if (search) query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,current_content.ilike.%${search}%`)
@@ -42,7 +44,9 @@ export async function GET(request: NextRequest) {
   let result = (snippets ?? []).map((s: any) => ({
     ...s,
     tags: (s.snippet_tags ?? []).map((st: any) => st.tags).filter(Boolean),
+    collection: s.collections ?? null,
     snippet_tags: undefined,
+    collections: undefined,
   }))
 
   // Server-side AND-filter by tag IDs
@@ -74,7 +78,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     )
   }
-  const { title, description, language, content, commitMessage, tagIds } = parsed.data
+  const { title, description, language, content, commitMessage, tagIds, collectionId } = parsed.data
 
   // Create snippet
   const { data: snippet, error } = await supabase
@@ -85,6 +89,7 @@ export async function POST(request: NextRequest) {
       description: description || null,
       language,
       current_content: content,
+      collection_id: collectionId ?? null,
     })
     .select()
     .single()

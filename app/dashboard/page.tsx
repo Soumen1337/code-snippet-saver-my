@@ -9,7 +9,8 @@ import { SnippetDialog } from '@/components/snippet-dialog'
 import { SnippetDetailPanel } from '@/components/snippet-detail-panel'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { SnippetWithTags, Tag, Language } from '@/lib/types'
+import { SnippetWithTags, Tag, Language, Collection } from '@/lib/types'
+import { CommandPalette } from '@/components/command-palette'
 import { Search, Plus, Code2 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDebounce } from '@/hooks/use-debounce'
@@ -24,6 +25,7 @@ export default function DashboardPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedSnippet, setSelectedSnippet] = useState<SnippetWithTags | null>(null)
   const [editingSnippet, setEditingSnippet] = useState<SnippetWithTags | null>(null)
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null)
 
   const debouncedSearch = useDebounce(searchQuery, 300)
 
@@ -41,6 +43,15 @@ export default function DashboardPage() {
   const snippets = data?.snippets || []
   const tags = data?.tags || []
 
+  const { data: collectionsData } = useSWR<{ collections: Collection[] }>(
+    '/api/collections', fetcher
+  )
+  const collections = collectionsData?.collections || []
+
+  const filteredSnippets = selectedCollectionId
+    ? snippets.filter(s => s.collection_id === selectedCollectionId)
+    : snippets
+
   const handleSaveSnippet = useCallback(async (snippetData: {
     title: string
     description: string
@@ -48,6 +59,7 @@ export default function DashboardPage() {
     content: string
     commitMessage: string
     tagIds: string[]
+    collectionId: string | null
   }) => {
     const url = editingSnippet
       ? `/api/snippets/${editingSnippet.id}`
@@ -60,11 +72,11 @@ export default function DashboardPage() {
     })
 
     if (res.ok) {
+      const updatedData = await res.json()
       toast.success(editingSnippet ? 'Snippet updated!' : 'Snippet created!')
-      mutate()
+      await mutate()
       setEditingSnippet(null)
       if (selectedSnippet && editingSnippet?.id === selectedSnippet.id) {
-        const updatedData = await res.json()
         setSelectedSnippet(updatedData.snippet)
       }
     } else {
@@ -85,6 +97,15 @@ export default function DashboardPage() {
     }
   }
 
+  const handlePinSnippet = async (id: string, pinned: boolean) => {
+    const res = await fetch(`/api/snippets/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_pinned: pinned }),
+    })
+    if (res.ok) { mutate() } else { toast.error('Failed to update pin') }
+  }
+
   const handleNewSnippet = () => {
     setEditingSnippet(null)
     setIsDialogOpen(true)
@@ -95,7 +116,7 @@ export default function DashboardPage() {
     setIsDialogOpen(true)
   }
 
-  const snippetCount = snippets.length
+  const snippetCount = filteredSnippets.length
 
   return (
     <div className="flex min-h-svh bg-background">
@@ -104,6 +125,9 @@ export default function DashboardPage() {
         selectedLanguage={selectedLanguage}
         onLanguageSelect={setSelectedLanguage}
         onNewSnippet={handleNewSnippet}
+        collections={collections}
+        selectedCollectionId={selectedCollectionId}
+        onCollectionSelect={setSelectedCollectionId}
       />
 
       {/* Main Content */}
@@ -167,24 +191,25 @@ export default function DashboardPage() {
             <div className="text-center py-20">
               <p className="text-destructive">Failed to load snippets</p>
             </div>
-          ) : snippets.length === 0 ? (
+          ) : filteredSnippets.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
               <div className="mb-3 text-muted-foreground/50">
                 <Code2 className="h-12 w-12 mx-auto" strokeWidth={1} />
               </div>
               <p className="text-muted-foreground">
-                {debouncedSearch || selectedLanguage
+                {debouncedSearch || selectedLanguage || selectedCollectionId
                   ? 'No snippets found'
                   : 'No snippets yet'}
               </p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {snippets.map((snippet) => (
+              {filteredSnippets.map((snippet) => (
                 <SnippetCard
                   key={snippet.id}
                   snippet={snippet}
                   onClick={() => setSelectedSnippet(snippet)}
+                  onPin={handlePinSnippet}
                 />
               ))}
             </div>
@@ -192,21 +217,30 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {/* Snippet Dialog */}
       <SnippetDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         snippet={editingSnippet}
         onSave={handleSaveSnippet}
         availableTags={tags}
+        availableCollections={collections}
       />
 
-      {/* Snippet Detail Panel */}
       <SnippetDetailPanel
         snippet={selectedSnippet}
         onClose={() => setSelectedSnippet(null)}
         onEdit={() => selectedSnippet && handleEditSnippet(selectedSnippet)}
         onDelete={() => selectedSnippet && handleDeleteSnippet(selectedSnippet.id)}
+        onShareToggle={(updated) => {
+          setSelectedSnippet(prev => prev ? { ...prev, is_public: updated.is_public, share_slug: updated.share_slug } : prev)
+          mutate()
+        }}
+      />
+
+      <CommandPalette
+        snippets={snippets}
+        onSelectSnippet={setSelectedSnippet}
+        onNewSnippet={handleNewSnippet}
       />
     </div>
   )

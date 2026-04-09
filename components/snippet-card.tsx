@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Copy, Clock, Check } from 'lucide-react'
+import { Copy, Clock, Check, Pin, PinOff } from 'lucide-react'
 import { SnippetWithTags, Language } from '@/lib/types'
 import { CodeEditor } from './code-editor'
 import { useState } from 'react'
@@ -23,9 +23,10 @@ const languageColors: Record<string, string> = {
 interface SnippetCardProps {
   snippet: SnippetWithTags
   onClick: () => void
+  onPin: (id: string, pinned: boolean) => void
 }
 
-export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
+export function SnippetCard({ snippet, onClick, onPin }: SnippetCardProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -35,47 +36,63 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handlePin = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onPin(snippet.id, !snippet.is_pinned)
+  }
+
   const previewContent = snippet.current_content.split('\n').slice(0, 6).join('\n')
 
   return (
     <Card
-      className="bg-card border border-border hover:border-primary/40 hover:bg-card/80 rounded-xl cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 group"
+      className={cn(
+        'bg-card border rounded-xl cursor-pointer hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 group',
+        snippet.is_pinned
+          ? 'border-primary/40 shadow-sm shadow-primary/10'
+          : 'border-border hover:border-primary/40 hover:bg-card/80'
+      )}
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-base font-medium text-card-foreground truncate">
-              {snippet.title}
-            </CardTitle>
+            <div className="flex items-center gap-1.5 min-w-0">
+              {snippet.is_pinned && <Pin className="h-3 w-3 text-primary shrink-0" />}
+              <CardTitle className="text-base font-medium text-card-foreground truncate">
+                {snippet.title}
+              </CardTitle>
+            </div>
             {snippet.description && (
-              <p className="mt-1 text-sm text-muted-foreground truncate">
-                {snippet.description}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground truncate">{snippet.description}</p>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border hover:border-primary/50"
-            onClick={handleCopy}
-          >
-            {copied ? (
-              <Check className="h-4 w-4 text-green-500" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-          </Button>
+          <div className="flex items-center gap-1 shrink-0">
+            <Button
+              variant="ghost" size="icon"
+              className={cn(
+                'h-8 w-8 border transition-opacity duration-200',
+                snippet.is_pinned
+                  ? 'opacity-100 border-primary/30 text-primary hover:bg-primary/10'
+                  : 'opacity-0 group-hover:opacity-100 border-border hover:border-primary/50'
+              )}
+              onClick={handlePin}
+              title={snippet.is_pinned ? 'Unpin' : 'Pin to top'}
+            >
+              {snippet.is_pinned ? <PinOff className="h-3.5 w-3.5" /> : <Pin className="h-3.5 w-3.5" />}
+            </Button>
+            <Button
+              variant="ghost" size="icon"
+              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border hover:border-primary/50"
+              onClick={handleCopy}
+            >
+              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="mb-3 h-32 overflow-hidden rounded-md">
-          <CodeEditor
-            value={previewContent}
-            language={snippet.language as Language}
-            readOnly
-            className="h-full text-xs"
-          />
+          <CodeEditor value={previewContent} language={snippet.language as Language} readOnly className="h-full text-xs" />
         </div>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 flex-wrap min-w-0">
@@ -88,9 +105,7 @@ export function SnippetCard({ snippet, onClick }: SnippetCardProps) {
               </span>
             ))}
             {snippet.tags.length > 2 && (
-              <span className="text-xs text-muted-foreground">
-                +{snippet.tags.length - 2}
-              </span>
+              <span className="text-xs text-muted-foreground">+{snippet.tags.length - 2}</span>
             )}
           </div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">

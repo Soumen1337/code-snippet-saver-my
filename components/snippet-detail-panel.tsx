@@ -25,8 +25,10 @@ import { CodeEditor } from './code-editor'
 import { VersionHistory } from './version-history'
 import { DiffViewer } from './diff-viewer'
 import { SnippetWithTags, SnippetVersion, Language } from '@/lib/types'
-import { Copy, Edit, Trash2, Check, Clock, X } from 'lucide-react'
+import { Copy, Edit, Trash2, Check, Clock, X, Link2, ImageDown } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
+import { ExportImageModal } from './export-image-modal'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -35,6 +37,7 @@ interface SnippetDetailPanelProps {
   onClose: () => void
   onEdit: () => void
   onDelete: () => void
+  onShareToggle?: (updated: SnippetWithTags) => void
 }
 
 export function SnippetDetailPanel({
@@ -42,9 +45,11 @@ export function SnippetDetailPanel({
   onClose,
   onEdit,
   onDelete,
+  onShareToggle,
 }: SnippetDetailPanelProps) {
   const [copied, setCopied] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showExport, setShowExport] = useState(false)
   const [selectedVersions, setSelectedVersions] = useState<[SnippetVersion | null, SnippetVersion | null]>([null, null])
   const [activeTab, setActiveTab] = useState('code')
 
@@ -95,9 +100,27 @@ export function SnippetDetailPanel({
     })
   }
 
-  const clearDiffSelection = () => {
-    setSelectedVersions([null, null])
+  const clearDiffSelection = () => setSelectedVersions([null, null])
+
+  const handleToggleShare = async () => {
+    if (!snippet) return
+    const res = await fetch(`/api/snippets/${snippet.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_public: !snippet.is_public }),
+    })
+    if (res.ok) {
+      const { snippet: updated } = await res.json()
+      toast.success(updated.is_public ? 'Snippet is now public' : 'Snippet is now private')
+      onShareToggle?.(updated)
+    } else {
+      toast.error('Failed to update sharing')
+    }
   }
+
+  const shareUrl = snippet?.share_slug
+    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/s/${snippet.share_slug}`
+    : null
 
   return (
     <>
@@ -154,10 +177,13 @@ export function SnippetDetailPanel({
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Button>
+                  <Button onClick={() => setShowExport(true)} variant="outline" size="sm" className="hover:border-primary/50 transition-colors">
+                    <ImageDown className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
                   <Button
                     onClick={() => setShowDeleteDialog(true)}
-                    variant="outline"
-                    size="sm"
+                    variant="outline" size="sm"
                     className="text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
@@ -165,9 +191,32 @@ export function SnippetDetailPanel({
                   </Button>
                 </div>
 
-                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-3">
-                  <Clock className="h-3 w-3" />
-                  <span>Updated {formatDistanceToNow(new Date(snippet.updated_at), { addSuffix: true })}</span>
+                <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span>Updated {formatDistanceToNow(new Date(snippet.updated_at), { addSuffix: true })}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {snippet.is_public ? 'Public' : 'Private'}
+                    </span>
+                    <button
+                      onClick={handleToggleShare}
+                      className={['relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 cursor-pointer',
+                        snippet.is_public ? 'bg-primary' : 'bg-muted'].join(' ')}
+                      role="switch" aria-checked={snippet.is_public}
+                    >
+                      <span className={['pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-lg transition-transform duration-200',
+                        snippet.is_public ? 'translate-x-4' : 'translate-x-0'].join(' ')} />
+                    </button>
+                    {snippet.is_public && shareUrl && (
+                      <button onClick={async () => { await navigator.clipboard.writeText(shareUrl); toast.success('Link copied!') }}
+                        className="text-xs text-primary hover:underline flex items-center gap-1">
+                        <Link2 className="h-3 w-3" />
+                        Copy link
+                      </button>
+                    )}
+                  </div>
                 </div>
               </SheetHeader>
 
@@ -233,6 +282,10 @@ export function SnippetDetailPanel({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {snippet && (
+        <ExportImageModal open={showExport} onOpenChange={setShowExport} snippet={snippet} />
+      )}
     </>
   )
 }
