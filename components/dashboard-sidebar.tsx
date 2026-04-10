@@ -161,10 +161,10 @@ export function DashboardSidebar({
       <nav className="px-3 pb-3">
         <Button
           variant="ghost"
-          onClick={() => onLanguageSelect(null)}
+          onClick={() => { onLanguageSelect(null); onCollectionSelect?.(null) }}
           className={cn(
             'w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent',
-            selectedLanguage === null && 'bg-primary/10 border-l-2 border-primary',
+            selectedLanguage === null && !selectedCollectionId && 'bg-primary/10 border-l-2 border-primary',
             isCollapsed && 'justify-center px-0'
           )}
         >

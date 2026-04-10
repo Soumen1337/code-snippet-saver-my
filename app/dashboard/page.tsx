@@ -124,11 +124,11 @@ export default function DashboardPage() {
       {/* Sidebar */}
       <DashboardSidebar
         selectedLanguage={selectedLanguage}
-        onLanguageSelect={setSelectedLanguage}
+        onLanguageSelect={(lang) => { setSelectedLanguage(lang); setSelectedCollectionId(null) }}
         onNewSnippet={handleNewSnippet}
         collections={collections}
         selectedCollectionId={selectedCollectionId}
-        onCollectionSelect={setSelectedCollectionId}
+        onCollectionSelect={(id) => { setSelectedCollectionId(id); setSelectedLanguage(null) }}
         onCollectionCreated={() => mutateCollections()}
       />
 
