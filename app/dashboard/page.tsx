@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { SnippetWithTags, Tag, Language, Collection } from '@/lib/types'
 import { CommandPalette } from '@/components/command-palette'
-import { Search, Plus, Code2 } from 'lucide-react'
+import { Search, Plus, Code2, Command } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDebounce } from '@/hooks/use-debounce'
 import { toast } from 'sonner'
@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const [selectedSnippet, setSelectedSnippet] = useState<SnippetWithTags | null>(null)
   const [editingSnippet, setEditingSnippet] = useState<SnippetWithTags | null>(null)
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null)
+  const [cmdOpen, setCmdOpen] = useState(false)
 
   const debouncedSearch = useDebounce(searchQuery, 300)
 
@@ -43,7 +44,7 @@ export default function DashboardPage() {
   const snippets = data?.snippets || []
   const tags = data?.tags || []
 
-  const { data: collectionsData } = useSWR<{ collections: Collection[] }>(
+  const { data: collectionsData, mutate: mutateCollections } = useSWR<{ collections: Collection[] }>(
     '/api/collections', fetcher
   )
   const collections = collectionsData?.collections || []
@@ -128,6 +129,7 @@ export default function DashboardPage() {
         collections={collections}
         selectedCollectionId={selectedCollectionId}
         onCollectionSelect={setSelectedCollectionId}
+        onCollectionCreated={() => mutateCollections()}
       />
 
       {/* Main Content */}
@@ -141,13 +143,23 @@ export default function DashboardPage() {
                 {snippetCount} {snippetCount === 1 ? 'snippet' : 'snippets'} saved
               </p>
             </div>
-            <Button
-              onClick={handleNewSnippet}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              New Snippet
-            </Button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCmdOpen(true)}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border bg-card text-xs text-muted-foreground hover:border-primary/50 hover:text-foreground transition-colors"
+                title="Open command palette (Ctrl+K)"
+              >
+                <Command className="h-3 w-3" />
+                <span>K</span>
+              </button>
+              <Button
+                onClick={handleNewSnippet}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Snippet
+              </Button>
+            </div>
           </div>
 
           {/* Search */}
@@ -241,6 +253,8 @@ export default function DashboardPage() {
         snippets={snippets}
         onSelectSnippet={setSelectedSnippet}
         onNewSnippet={handleNewSnippet}
+        open={cmdOpen}
+        onOpenChange={setCmdOpen}
       />
     </div>
   )

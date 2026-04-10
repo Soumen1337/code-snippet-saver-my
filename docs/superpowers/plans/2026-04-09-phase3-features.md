@@ -31,7 +31,7 @@ continue# Phase 3 Features Implementation Plan
 
 **Files:** Supabase SQL editor (manual step — not a code file)
 
-- [ ] **Step 1.1: Run this SQL in your Supabase dashboard → SQL Editor**
+- [x] **Step 1.1: Run this SQL in your Supabase dashboard → SQL Editor**
 
 ```sql
 ALTER TABLE snippets ADD COLUMN is_pinned boolean NOT NULL DEFAULT false;
@@ -39,7 +39,7 @@ ALTER TABLE snippets ADD COLUMN is_pinned boolean NOT NULL DEFAULT false;
 
 Expected: "Success. No rows returned."
 
-- [ ] **Step 1.2: Verify the column exists**
+- [x] **Step 1.2: Verify the column exists**
 
 ```sql
 SELECT column_name, data_type, column_default
@@ -57,7 +57,7 @@ Expected: one row showing `is_pinned | boolean | false`
 - Modify: `lib/types.ts:1-10`
 - Modify: `app/api/snippets/route.ts:30-33`
 
-- [ ] **Step 2.1: Add `is_pinned` to the `Snippet` interface in `lib/types.ts`**
+- [x] **Step 2.1: Add `is_pinned` to the `Snippet` interface in `lib/types.ts`**
 
 ```typescript
 export interface Snippet {
@@ -73,7 +73,7 @@ export interface Snippet {
 }
 ```
 
-- [ ] **Step 2.2: Update the GET query in `app/api/snippets/route.ts` to sort pinned first**
+- [x] **Step 2.2: Update the GET query in `app/api/snippets/route.ts` to sort pinned first**
 
 Replace the existing `.order('updated_at', { ascending: false })` line with:
 
@@ -86,7 +86,7 @@ Replace the existing `.order('updated_at', { ascending: false })` line with:
     .order('updated_at', { ascending: false })
 ```
 
-- [ ] **Step 2.3: Commit**
+- [x] **Step 2.3: Commit**
 
 ```bash
 git add lib/types.ts app/api/snippets/route.ts
@@ -100,7 +100,7 @@ git commit -m "feat(pin): add is_pinned column migration + sort pinned first in 
 **Files:**
 - Modify: `app/api/snippets/[id]/route.ts` — append PATCH handler after the DELETE export
 
-- [ ] **Step 3.1: Add the `patchSchema` and `PATCH` handler at the bottom of `app/api/snippets/[id]/route.ts`**
+- [x] **Step 3.1: Add the `patchSchema` and `PATCH` handler at the bottom of `app/api/snippets/[id]/route.ts`**
 
 ```typescript
 const patchSchema = z.object({
@@ -144,7 +144,7 @@ export async function PATCH(
 }
 ```
 
-- [ ] **Step 3.2: Commit**
+- [x] **Step 3.2: Commit**
 
 ```bash
 git add app/api/snippets/[id]/route.ts
@@ -158,7 +158,7 @@ git commit -m "feat(pin): add PATCH /api/snippets/[id] for quick field updates"
 **Files:**
 - Modify: `components/snippet-card.tsx`
 
-- [ ] **Step 4.1: Replace the full content of `components/snippet-card.tsx`**
+- [x] **Step 4.1: Replace the full content of `components/snippet-card.tsx`**
 
 ```typescript
 'use client'
@@ -310,7 +310,7 @@ export function SnippetCard({ snippet, onClick, onPin }: SnippetCardProps) {
 **Files:**
 - Modify: `app/dashboard/page.tsx`
 
-- [ ] **Step 5.1: Add `handlePinSnippet` in `app/dashboard/page.tsx` after `handleDeleteSnippet`**
+- [x] **Step 5.1: Add `handlePinSnippet` in `app/dashboard/page.tsx` after `handleDeleteSnippet`**
 
 ```typescript
   const handlePinSnippet = async (id: string, pinned: boolean) => {
@@ -327,7 +327,7 @@ export function SnippetCard({ snippet, onClick, onPin }: SnippetCardProps) {
   }
 ```
 
-- [ ] **Step 5.2: Pass `onPin` to every `SnippetCard` in the grid**
+- [x] **Step 5.2: Pass `onPin` to every `SnippetCard` in the grid**
 
 Find the `<SnippetCard` usage and update it:
 
@@ -342,7 +342,7 @@ Find the `<SnippetCard` usage and update it:
               ))}
 ```
 
-- [ ] **Step 5.3: Commit**
+- [x] **Step 5.3: Commit**
 
 ```bash
 git add components/snippet-card.tsx app/dashboard/page.tsx
@@ -366,7 +366,7 @@ git commit -m "feat(pin): pin toggle on cards, pinned sort to top"
 **Files:**
 - Create: `components/command-palette.tsx`
 
-- [ ] **Step 6.1: Create `components/command-palette.tsx`**
+- [x] **Step 6.1: Create `components/command-palette.tsx`**
 
 ```typescript
 'use client'
@@ -485,13 +485,13 @@ export function CommandPalette({
 **Files:**
 - Modify: `app/dashboard/page.tsx`
 
-- [ ] **Step 7.1: Import `CommandPalette` at the top of `app/dashboard/page.tsx`**
+- [x] **Step 7.1: Import `CommandPalette` at the top of `app/dashboard/page.tsx`**
 
 ```typescript
 import { CommandPalette } from '@/components/command-palette'
 ```
 
-- [ ] **Step 7.2: Render `<CommandPalette />` just before the closing `</div>` of the root element in `DashboardPage`**
+- [x] **Step 7.2: Render `<CommandPalette />` just before the closing `</div>` of the root element in `DashboardPage`**
 
 Place it after `</SnippetDetailPanel>`, before the final `</div>`:
 
@@ -503,7 +503,7 @@ Place it after `</SnippetDetailPanel>`, before the final `</div>`:
       />
 ```
 
-- [ ] **Step 7.3: Commit**
+- [x] **Step 7.3: Commit**
 
 ```bash
 git add components/command-palette.tsx app/dashboard/page.tsx
@@ -528,7 +528,7 @@ git commit -m "feat(cmd): add ⌘K command palette with snippet search and quick
 
 ### Task 8: DB migration for public sharing
 
-- [ ] **Step 8.1: Run this SQL in Supabase SQL Editor**
+- [x] **Step 8.1: Run this SQL in Supabase SQL Editor**
 
 ```sql
 ALTER TABLE snippets
@@ -542,7 +542,7 @@ CREATE POLICY "Public snippets are readable by anyone"
   USING (is_public = true);
 ```
 
-- [ ] **Step 8.2: Verify**
+- [x] **Step 8.2: Verify**
 
 ```sql
 SELECT column_name FROM information_schema.columns
@@ -559,7 +559,7 @@ Expected: 2 rows.
 - Modify: `lib/types.ts`
 - Modify: `app/api/snippets/[id]/route.ts`
 
-- [ ] **Step 9.1: Add `is_public` and `share_slug` to `Snippet` in `lib/types.ts`**
+- [x] **Step 9.1: Add `is_public` and `share_slug` to `Snippet` in `lib/types.ts`**
 
 ```typescript
 export interface Snippet {
@@ -577,7 +577,7 @@ export interface Snippet {
 }
 ```
 
-- [ ] **Step 9.2: Extend `patchSchema` in `app/api/snippets/[id]/route.ts` to handle `is_public`**
+- [x] **Step 9.2: Extend `patchSchema` in `app/api/snippets/[id]/route.ts` to handle `is_public`**
 
 Replace the existing `patchSchema` with:
 
@@ -651,7 +651,7 @@ export async function PATCH(
 }
 ```
 
-- [ ] **Step 9.3: Commit**
+- [x] **Step 9.3: Commit**
 
 ```bash
 git add lib/types.ts app/api/snippets/[id]/route.ts
@@ -665,7 +665,7 @@ git commit -m "feat(share): add is_public + share_slug to types and PATCH endpoi
 **Files:**
 - Modify: `components/snippet-detail-panel.tsx`
 
-- [ ] **Step 10.1: Add share state and handler inside `SnippetDetailPanel`**
+- [x] **Step 10.1: Add share state and handler inside `SnippetDetailPanel`**
 
 After the `clearDiffSelection` function, add:
 
@@ -704,7 +704,7 @@ After the `clearDiffSelection` function, add:
   }
 ```
 
-- [ ] **Step 10.2: Add `onShareToggle` to `SnippetDetailPanelProps`**
+- [x] **Step 10.2: Add `onShareToggle` to `SnippetDetailPanelProps`**
 
 ```typescript
 interface SnippetDetailPanelProps {
@@ -728,7 +728,7 @@ export function SnippetDetailPanel({
 }: SnippetDetailPanelProps) {
 ```
 
-- [ ] **Step 10.3: Add the share UI section below the action buttons in the SheetHeader (after the `updated` timestamp row)**
+- [x] **Step 10.3: Add the share UI section below the action buttons in the SheetHeader (after the `updated` timestamp row)**
 
 ```typescript
                 {/* Share row */}
@@ -765,7 +765,7 @@ export function SnippetDetailPanel({
                 </div>
 ```
 
-- [ ] **Step 10.4: Wire `onShareToggle` in `app/dashboard/page.tsx`**
+- [x] **Step 10.4: Wire `onShareToggle` in `app/dashboard/page.tsx`**
 
 In `SnippetDetailPanel` JSX in the dashboard, add:
 
@@ -782,7 +782,7 @@ In `SnippetDetailPanel` JSX in the dashboard, add:
       />
 ```
 
-- [ ] **Step 10.5: Commit**
+- [x] **Step 10.5: Commit**
 
 ```bash
 git add components/snippet-detail-panel.tsx app/dashboard/page.tsx
@@ -796,7 +796,7 @@ git commit -m "feat(share): share toggle + copy link in detail panel"
 **Files:**
 - Create: `app/s/[slug]/page.tsx`
 
-- [ ] **Step 11.1: Create `app/s/[slug]/page.tsx`**
+- [x] **Step 11.1: Create `app/s/[slug]/page.tsx`**
 
 ```typescript
 import { createClient } from '@/lib/supabase/server'
@@ -932,7 +932,7 @@ export default async function PublicSnippetPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 11.2: Commit**
+- [x] **Step 11.2: Commit**
 
 ```bash
 git add app/s/
@@ -954,7 +954,7 @@ git commit -m "feat(share): public /s/[slug] page with syntax-highlighted code"
 
 ### Task 12: Install html-to-image
 
-- [ ] **Step 12.1: Install the package**
+- [x] **Step 12.1: Install the package**
 
 ```bash
 npm install html-to-image
@@ -962,7 +962,7 @@ npm install html-to-image
 
 Expected output: `added 1 package`
 
-- [ ] **Step 12.2: Commit**
+- [x] **Step 12.2: Commit**
 
 ```bash
 git add package.json package-lock.json
@@ -976,7 +976,7 @@ git commit -m "chore: install html-to-image for code export"
 **Files:**
 - Create: `components/export-image-modal.tsx`
 
-- [ ] **Step 13.1: Create `components/export-image-modal.tsx`**
+- [x] **Step 13.1: Create `components/export-image-modal.tsx`**
 
 ```typescript
 'use client'
@@ -1133,7 +1133,7 @@ export function ExportImageModal({ open, onOpenChange, snippet }: ExportImageMod
 **Files:**
 - Modify: `components/snippet-detail-panel.tsx`
 
-- [ ] **Step 14.1: Import `ExportImageModal` and `ImageDown` in `snippet-detail-panel.tsx`**
+- [x] **Step 14.1: Import `ExportImageModal` and `ImageDown` in `snippet-detail-panel.tsx`**
 
 Add to imports:
 ```typescript
@@ -1141,13 +1141,13 @@ import { ExportImageModal } from './export-image-modal'
 import { Copy, Edit, Trash2, Check, Clock, X, ImageDown } from 'lucide-react'
 ```
 
-- [ ] **Step 14.2: Add `showExport` state after the existing state declarations**
+- [x] **Step 14.2: Add `showExport` state after the existing state declarations**
 
 ```typescript
   const [showExport, setShowExport] = useState(false)
 ```
 
-- [ ] **Step 14.3: Add the Export button to the action row (after the Edit button)**
+- [x] **Step 14.3: Add the Export button to the action row (after the Edit button)**
 
 ```typescript
                   <Button onClick={() => setShowExport(true)} variant="outline" size="sm" className="hover:border-primary/50 transition-colors">
@@ -1156,7 +1156,7 @@ import { Copy, Edit, Trash2, Check, Clock, X, ImageDown } from 'lucide-react'
                   </Button>
 ```
 
-- [ ] **Step 14.4: Render `<ExportImageModal />` inside the `<>` fragment, after the `<AlertDialog>`**
+- [x] **Step 14.4: Render `<ExportImageModal />` inside the `<>` fragment, after the `<AlertDialog>`**
 
 ```typescript
       {snippet && (
@@ -1168,7 +1168,7 @@ import { Copy, Edit, Trash2, Check, Clock, X, ImageDown } from 'lucide-react'
       )}
 ```
 
-- [ ] **Step 14.5: Commit**
+- [x] **Step 14.5: Commit**
 
 ```bash
 git add components/export-image-modal.tsx components/snippet-detail-panel.tsx package.json package-lock.json
@@ -1196,7 +1196,7 @@ git commit -m "feat(export): carbon-style code image export with background pres
 
 ### Task 15: DB migration for collections
 
-- [ ] **Step 15.1: Run in Supabase SQL Editor**
+- [x] **Step 15.1: Run in Supabase SQL Editor**
 
 ```sql
 CREATE TABLE collections (
@@ -1218,7 +1218,7 @@ CREATE POLICY "Users can manage own collections"
   WITH CHECK (auth.uid() = user_id);
 ```
 
-- [ ] **Step 15.2: Verify**
+- [x] **Step 15.2: Verify**
 
 ```sql
 SELECT table_name FROM information_schema.tables
@@ -1234,7 +1234,7 @@ Expected: 1 row.
 **Files:**
 - Modify: `lib/types.ts`
 
-- [ ] **Step 16.1: Add `Collection` interface and `collection_id` to `Snippet`, and `collection` to `SnippetWithTags`**
+- [x] **Step 16.1: Add `Collection` interface and `collection_id` to `Snippet`, and `collection` to `SnippetWithTags`**
 
 ```typescript
 export interface Collection {
@@ -1266,7 +1266,7 @@ export interface SnippetWithTags extends Snippet {
 }
 ```
 
-- [ ] **Step 16.2: Commit**
+- [x] **Step 16.2: Commit**
 
 ```bash
 git add lib/types.ts
@@ -1281,7 +1281,7 @@ git commit -m "feat(collections): add Collection type, collection_id to Snippet"
 - Create: `app/api/collections/route.ts`
 - Create: `app/api/collections/[id]/route.ts`
 
-- [ ] **Step 17.1: Create `app/api/collections/route.ts`**
+- [x] **Step 17.1: Create `app/api/collections/route.ts`**
 
 ```typescript
 import { createClient } from '@/lib/supabase/server'
@@ -1330,7 +1330,7 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-- [ ] **Step 17.2: Create `app/api/collections/[id]/route.ts`**
+- [x] **Step 17.2: Create `app/api/collections/[id]/route.ts`**
 
 ```typescript
 import { createClient } from '@/lib/supabase/server'
@@ -1389,7 +1389,7 @@ export async function DELETE(
 }
 ```
 
-- [ ] **Step 17.3: Commit**
+- [x] **Step 17.3: Commit**
 
 ```bash
 git add app/api/collections/
@@ -1404,7 +1404,7 @@ git commit -m "feat(collections): GET/POST /api/collections and PUT/DELETE /api/
 - Modify: `app/api/snippets/route.ts`
 - Modify: `app/api/snippets/[id]/route.ts`
 
-- [ ] **Step 18.1: Update the SELECT query in `app/api/snippets/route.ts` to join collection**
+- [x] **Step 18.1: Update the SELECT query in `app/api/snippets/route.ts` to join collection**
 
 Change the `.select(...)` line to:
 
@@ -1424,7 +1424,7 @@ Update the result mapping to include `collection`:
   }))
 ```
 
-- [ ] **Step 18.2: Add `collection_id` to the `snippetSchema` in `app/api/snippets/[id]/route.ts`**
+- [x] **Step 18.2: Add `collection_id` to the `snippetSchema` in `app/api/snippets/[id]/route.ts`**
 
 In the existing `snippetSchema` at the top of the file:
 
@@ -1460,7 +1460,7 @@ In the `PUT` handler, add `collectionId` to destructuring and the update query:
     .single()
 ```
 
-- [ ] **Step 18.3: Also update `app/api/snippets/route.ts` POST to accept `collectionId`**
+- [x] **Step 18.3: Also update `app/api/snippets/route.ts` POST to accept `collectionId`**
 
 In the existing `snippetSchema` in `route.ts`:
 
@@ -1493,7 +1493,7 @@ In the POST handler's insert:
     .single()
 ```
 
-- [ ] **Step 18.4: Commit**
+- [x] **Step 18.4: Commit**
 
 ```bash
 git add app/api/snippets/route.ts app/api/snippets/[id]/route.ts
@@ -1507,7 +1507,7 @@ git commit -m "feat(collections): join collection in snippets GET, accept collec
 **Files:**
 - Modify: `components/snippet-dialog.tsx`
 
-- [ ] **Step 19.1: Add `Collection` import and `collections` prop to `SnippetDialogProps`**
+- [x] **Step 19.1: Add `Collection` import and `collections` prop to `SnippetDialogProps`**
 
 ```typescript
 import { SnippetWithTags, Language, SUPPORTED_LANGUAGES, Tag, Collection } from '@/lib/types'
@@ -1530,7 +1530,7 @@ interface SnippetDialogProps {
 }
 ```
 
-- [ ] **Step 19.2: Add `collectionId` state and reset logic inside `SnippetDialog`**
+- [x] **Step 19.2: Add `collectionId` state and reset logic inside `SnippetDialog`**
 
 After `const [isLoading, setIsLoading] = useState(false)`:
 ```typescript
@@ -1546,7 +1546,7 @@ And in the `else` branch:
       setCollectionId(null)
 ```
 
-- [ ] **Step 19.3: Add `collectionId` to `handleSubmit`**
+- [x] **Step 19.3: Add `collectionId` to `handleSubmit`**
 
 ```typescript
       await onSave({
@@ -1560,7 +1560,7 @@ And in the `else` branch:
       })
 ```
 
-- [ ] **Step 19.4: Add collection picker UI in the form (after the tags section)**
+- [x] **Step 19.4: Add collection picker UI in the form (after the tags section)**
 
 ```typescript
           {availableCollections.length > 0 && (
@@ -1598,7 +1598,7 @@ And in the `else` branch:
           )}
 ```
 
-- [ ] **Step 19.5: Commit**
+- [x] **Step 19.5: Commit**
 
 ```bash
 git add components/snippet-dialog.tsx
@@ -1612,7 +1612,7 @@ git commit -m "feat(collections): collection picker in snippet create/edit dialo
 **Files:**
 - Modify: `components/dashboard-sidebar.tsx`
 
-- [ ] **Step 20.1: Add `Collection` import and new props to `DashboardSidebarProps`**
+- [x] **Step 20.1: Add `Collection` import and new props to `DashboardSidebarProps`**
 
 ```typescript
 import { Language, SUPPORTED_LANGUAGES, Collection } from '@/lib/types'
@@ -1639,7 +1639,7 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
 ```
 
-- [ ] **Step 20.2: Add collections section inside the `{!isCollapsed && (...)}` block, after the Languages section**
+- [x] **Step 20.2: Add collections section inside the `{!isCollapsed && (...)}` block, after the Languages section**
 
 ```typescript
           {collections.length > 0 && (
@@ -1670,7 +1670,7 @@ export function DashboardSidebar({
           )}
 ```
 
-- [ ] **Step 20.3: Commit**
+- [x] **Step 20.3: Commit**
 
 ```bash
 git add components/dashboard-sidebar.tsx
@@ -1684,7 +1684,7 @@ git commit -m "feat(collections): collections section in sidebar with color badg
 **Files:**
 - Modify: `app/dashboard/page.tsx`
 
-- [ ] **Step 21.1: Add collections SWR fetch and filter state**
+- [x] **Step 21.1: Add collections SWR fetch and filter state**
 
 After the existing `useSWR` for snippets, add:
 
@@ -1700,7 +1700,7 @@ After the existing `useSWR` for snippets, add:
 
 Add `Collection` to the imports from `@/lib/types`.
 
-- [ ] **Step 21.2: Filter snippets by collection client-side**
+- [x] **Step 21.2: Filter snippets by collection client-side**
 
 After `const snippets = data?.snippets || []`, add:
 
@@ -1716,7 +1716,7 @@ Replace all uses of `snippets` in the JSX grid/count with `filteredSnippets`.
 
 The map becomes `{filteredSnippets.map(...)}`.
 
-- [ ] **Step 21.3: Update `handleSaveSnippet` to pass `collectionId`**
+- [x] **Step 21.3: Update `handleSaveSnippet` to pass `collectionId`**
 
 ```typescript
   const handleSaveSnippet = useCallback(async (snippetData: {
@@ -1744,7 +1744,7 @@ The body JSON already spreads `snippetData`, but ensure `collectionId` is includ
       }),
 ```
 
-- [ ] **Step 21.4: Pass collections props to `DashboardSidebar` and `SnippetDialog`**
+- [x] **Step 21.4: Pass collections props to `DashboardSidebar` and `SnippetDialog`**
 
 ```typescript
       <DashboardSidebar
@@ -1768,7 +1768,7 @@ The body JSON already spreads `snippetData`, but ensure `collectionId` is includ
       />
 ```
 
-- [ ] **Step 21.5: Commit**
+- [x] **Step 21.5: Commit**
 
 ```bash
 git add app/dashboard/page.tsx
@@ -1779,7 +1779,7 @@ git commit -m "feat(collections): wire collections fetch, filter, and picker int
 
 ### Task 22: Final build check
 
-- [ ] **Step 22.1: Run build and confirm zero errors**
+- [x] **Step 22.1: Run build and confirm zero errors**
 
 ```bash
 npm run build
@@ -1787,7 +1787,7 @@ npm run build
 
 Expected: `✓ Compiled successfully` with no TypeScript errors.
 
-- [ ] **Step 22.2: Run TypeScript check**
+- [x] **Step 22.2: Run TypeScript check**
 
 ```bash
 npx tsc --noEmit
@@ -1795,7 +1795,7 @@ npx tsc --noEmit
 
 Expected: no output (zero errors).
 
-- [ ] **Step 22.3: Commit if any lint fixes were needed, then tag**
+- [x] **Step 22.3: Commit if any lint fixes were needed, then tag**
 
 ```bash
 git commit -m "chore: phase 3 features complete — pin, cmd-k, share, export, collections"

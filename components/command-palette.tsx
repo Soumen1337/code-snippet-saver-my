@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput,
   CommandItem, CommandList, CommandSeparator, CommandShortcut,
@@ -19,24 +19,24 @@ interface Props {
   snippets: SnippetWithTags[]
   onSelectSnippet: (snippet: SnippetWithTags) => void
   onNewSnippet: () => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function CommandPalette({ snippets, onSelectSnippet, onNewSnippet }: Props) {
-  const [open, setOpen] = useState(false)
-
+export function CommandPalette({ snippets, onSelectSnippet, onNewSnippet, open, onOpenChange }: Props) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        setOpen(prev => !prev)
+        onOpenChange(!open)
       }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [])
+  }, [open, onOpenChange])
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen} showCloseButton={false}
+    <CommandDialog open={open} onOpenChange={onOpenChange} showCloseButton={false}
       title="Command Palette" description="Search snippets or run an action">
       <CommandInput placeholder="Search snippets..." />
       <CommandList>
@@ -47,7 +47,7 @@ export function CommandPalette({ snippets, onSelectSnippet, onNewSnippet }: Prop
               <CommandItem
                 key={s.id}
                 value={`${s.title} ${s.language} ${s.tags.map(t => t.name).join(' ')}`}
-                onSelect={() => { onSelectSnippet(s); setOpen(false) }}
+                onSelect={() => { onSelectSnippet(s); onOpenChange(false) }}
                 className="gap-3"
               >
                 <FileCode className={`h-4 w-4 shrink-0 ${langColor[s.language] ?? 'text-muted-foreground'}`} />
@@ -60,7 +60,7 @@ export function CommandPalette({ snippets, onSelectSnippet, onNewSnippet }: Prop
         )}
         <CommandSeparator />
         <CommandGroup heading="Actions">
-          <CommandItem onSelect={() => { onNewSnippet(); setOpen(false) }} className="gap-3">
+          <CommandItem onSelect={() => { onNewSnippet(); onOpenChange(false) }} className="gap-3">
             <Plus className="h-4 w-4 text-muted-foreground" />
             <span>New Snippet</span>
             <CommandShortcut>⌘N</CommandShortcut>

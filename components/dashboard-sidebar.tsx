@@ -2,17 +2,27 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import {
   Code2,
   Plus,
   LayoutGrid,
   ChevronLeft,
   ChevronRight,
+  FolderPlus,
 } from 'lucide-react'
 import { Language, SUPPORTED_LANGUAGES, Collection } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { SettingsSheet } from '@/components/settings-sheet'
 import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 interface DashboardSidebarProps {
   selectedLanguage: Language | null
@@ -21,6 +31,7 @@ interface DashboardSidebarProps {
   collections?: Collection[]
   selectedCollectionId?: string | null
   onCollectionSelect?: (id: string | null) => void
+  onCollectionCreated?: () => void
 }
 
 const SIDEBAR_LANGUAGES: Language[] = [
@@ -43,10 +54,15 @@ export function DashboardSidebar({
   collections = [],
   selectedCollectionId = null,
   onCollectionSelect,
+  onCollectionCreated,
 }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [userEmail, setUserEmail] = useState('')
+  const [showNewCollection, setShowNewCollection] = useState(false)
+  const [newCollectionName, setNewCollectionName] = useState('')
+  const [newCollectionColor, setNewCollectionColor] = useState('#8b5cf6')
+  const [creatingCollection, setCreatingCollection] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -59,6 +75,30 @@ export function DashboardSidebar({
     }
     fetchUser()
   }, [])
+
+  const handleCreateCollection = async () => {
+    if (!newCollectionName.trim()) return
+    setCreatingCollection(true)
+    try {
+      const res = await fetch('/api/collections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCollectionName.trim(), color: newCollectionColor }),
+      })
+      if (res.ok) {
+        toast.success('Collection created!')
+        setShowNewCollection(false)
+        setNewCollectionName('')
+        setNewCollectionColor('#8b5cf6')
+        onCollectionCreated?.()
+      } else {
+        const data = await res.json()
+        toast.error(data.error || 'Failed to create collection')
+      }
+    } finally {
+      setCreatingCollection(false)
+    }
+  }
 
   const initials = (displayName || userEmail).slice(0, 2).toUpperCase()
   const label = displayName || userEmail.split('@')[0] || 'Account'
@@ -159,13 +199,22 @@ export function DashboardSidebar({
             })}
           </div>
 
-          {collections.length > 0 && (
-            <div className="mt-4">
-              <div className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
-                Collections
-              </div>
-              <div className="space-y-1">
-                {collections.map((col) => (
+          <div className="mt-4">
+            <div className="mb-2 px-2 flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-sidebar-muted">Collections</span>
+              <button
+                onClick={() => setShowNewCollection(true)}
+                className="text-sidebar-muted hover:text-sidebar-foreground transition-colors"
+                title="New collection"
+              >
+                <FolderPlus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div className="space-y-1">
+              {collections.length === 0 ? (
+                <p className="px-2 text-xs text-sidebar-muted italic">No collections yet</p>
+              ) : (
+                collections.map((col) => (
                   <Button key={col.id} variant="ghost"
                     onClick={() => onCollectionSelect?.(col.id === selectedCollectionId ? null : col.id)}
                     className={cn('w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent font-normal',
@@ -175,10 +224,10 @@ export function DashboardSidebar({
                     <span className="h-2.5 w-2.5 rounded-full mr-2 shrink-0" style={{ backgroundColor: col.color }} />
                     <span className="truncate">{col.name}</span>
                   </Button>
-                ))}
-              </div>
+                ))
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -219,6 +268,46 @@ export function DashboardSidebar({
           </div>
         )}
       </div>
+      <Dialog open={showNewCollection} onOpenChange={setShowNewCollection}>
+        <DialogContent className="max-w-sm bg-card border-border">
+          <DialogHeader>
+            <DialogTitle>New Collection</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 py-2">
+            <Input
+              placeholder="Collection name"
+              value={newCollectionName}
+              onChange={(e) => setNewCollectionName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateCollection()}
+              autoFocus
+              className="border-border focus:border-primary"
+            />
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">Color</span>
+              <div className="flex gap-2">
+                {['#8b5cf6','#3b82f6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4'].map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setNewCollectionColor(c)}
+                    className={cn('h-6 w-6 rounded-full transition-all', newCollectionColor === c && 'ring-2 ring-offset-2 ring-offset-card ring-primary')}
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNewCollection(false)}>Cancel</Button>
+            <Button
+              onClick={handleCreateCollection}
+              disabled={creatingCollection || !newCollectionName.trim()}
+              className="gradient-bg hover:opacity-90 text-white"
+            >
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </aside>
   )
 }
